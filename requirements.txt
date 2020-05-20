@@ -1,6 +1,6 @@
 markdown2
 click
 wkhtmltopdf
-nltk
-langdetect
-pybtex
+langdetect==1.0.7
+pybtex==0.22.2
+nltk==3.4.5
