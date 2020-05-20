@@ -256,7 +256,7 @@ def main():
             file_bib.close()
 
             if LANGUAGE == 'portuguese':
-                fin = open(path_bib+NAME_FILE_OUTPUT_BIB, "w+")
+                fin = open(path_bib+NAME_FILE_OUTPUT_BIB, "rt+")
                 contents = ''
                 for index, month in enumerate(MONTHS_ENG_VALID):
                     month_pt = MONTHS_PORT_VALID[index].upper()
