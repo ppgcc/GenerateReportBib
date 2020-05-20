@@ -66,24 +66,29 @@ virtualenv\virtual_1\Scripts\activate
 ```
 
 Agora, antes da linha de comando, aparecerá um flag (virtual_1) dizendo que você está usando o virtual env 'virtual_1':
-```
+```bash
 (virtual_1) C:\Users\user\Desktop>
 ```
 A partir daqui, você pode começar a instalar as bibliotecas que desejar. Para este projeto, vamos fazer uso do `pip` para instalar alguns pacotes.
 
 ## Dependências do projeto
 
-Neste momento, acesse o local aonde o projeto foi baixado, por exemplo:
+Neste momento, acesse o local onde o projeto foi baixado, por exemplo:
 
-```
-(virtual_1) C:\Users\user\Desktop> cd GenerateReportBib
-(virtual_1) C:\Users\user\Desktop\GenerateReportBib>
+```bash
+(virtual_1) > cd GenerateReportBib
+(virtual_1) GenerateReportBib>
 ```
 
 Para que o projeto funcione, antes você precisa instalar alguns pocotes. Para facilitar este processo, execute o comando abaixo que ele importará todos os pacotes de uma só vez:
 
+```bash
+(virtual_1) GenerateReportBib> pip install -r requirements.txt
 ```
-(virtual_1) C:\Users\user\Desktop\GenerateReportBib> pip install -r requirements.txt
+
+Como o projeto utiliza o recurso de stopwords do nltk, precisamos instalar isto através dos script:
+```bash
+(virtual_1) GenerateReportBib> python nltk_config.py
 ```
 
 ## Entendendo o GRB

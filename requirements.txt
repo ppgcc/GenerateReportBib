@@ -1,3 +1,6 @@
 markdown2
 click
 wkhtmltopdf
+nltk
+langdetect
+pybtex
