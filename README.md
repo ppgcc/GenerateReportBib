@@ -4,19 +4,21 @@ Este projeto é uma iniciativa do atual Representante Discente do Programa de P�
 
 ## Tabela de conteúdos
 
-- [Utilização](#utilizacao)
-- [Configuração ambiente Python](#configuracao)
-  - [Ambiente virtual Python](#ambpython)
-    - [Configurando o ambiente](#configamb)
-- [Dependências do projeto](#dependencias)
-- [Entendendo o GRB](#entendoGRB)
-- [Utilizando o GRB](#utilizandoGRB)
-  - [Possíveis situações de relatórios de erros](#possiveis-rel-erros)
-    - [Erro no config.json](#erro-config)
-    - [Erro no arquivo.bib](#erro-bib)
-  - [Relatório com os avisos](#rel-avisos)
-    - [Novo arquivo.bib](#novo-bib)
-  - [Lembre-se](#lembre-se)
+- [Utilização](#utilização)
+- [Configuração do Ambiente Python](#configuração-do-ambiente-python)
+  - [Ambiente Virtual Python](#ambiente-virtual-python)
+    - [Configurando o Ambiente](#configurando-o-ambiente)
+- [Dependências do Projeto](#dependências-do-projeto)
+- [Entendendo o GRB](#entendendo-o-GRB)
+- [Utilizando o GRB](#utilizando-o-GRB)
+  - [Possíveis Situações de Relatórios de Erros](#possíveis-situações-de-relatórios-de-erros)
+    - [Erro no config.json](#erro-no-config.json)
+    - [Erro no arquivo.bib](#erro-no-arquivo.bib)
+  - [Principais Relatórios](#principais-relatórios)
+    - [Relatório com os Avisos](#relatório-com-os-avisos)
+    - [Novo arquivo.bib](#novo-arquivo.bib)
+      - [Lembre-se](#lembre-se)
+    - [Relatório 'PARA-BÉNS'](#relatório-'PARA-BÉNS')
 - [Agradecimentos](#agradecimentos)
 - [Contribuindo](#contribuindo)
 
@@ -26,15 +28,15 @@ As verificações programadas neste projeto seguem a padronização definida no 
 
 Faça o download deste repositório (ou clone) em seu ambiente (computador). Lembre-se da pasta (local) aonde este projeto ficará.
 
-## Configuração ambiente Python
+## Configuração do Ambiente Python
 
 Para que você possa executar este projeto, será necessário ter instalado em sua máquina o `Python3`. Se você já possui o ambiente configurado, pode pular este tópico.
 
-### Ambiente virtual Python
+### Ambiente Virtual Python
 
 Para quem ainda não tem instalado o Python3, sugiro fazer uso do `virtualenv`. É uma forma de criar ambientes virtuais para o uso do Python, com o objetivo de deixar as modificações e bibliotecas em um ambiente local e não global, não 'bagunçando' as configurações originais do seu ambiente Python, além de não deixar 'sujeira' de configurações e pacotes inatalados. Você pode configurar vários ambientes, de acordo com o que tiver desenvolvendo e assim, os pacotes instalados ficam específicos para cada ambiente.
 
-#### Configurando o ambiente
+#### Configurando o Ambiente
 
 Instale o Python3 seguindo os passos de acordo com o seu Sistema Operacional (SO):
 
@@ -95,6 +97,8 @@ Antes de iniciar o uso deste sistema, preste bastante atenção na estrutura de 
 - *GenerateBIB:* É nesta pasta que os novos arquivos .bib serão gerados. Após a execução do script, caso o seu bib não esteja com problemas de compilação, será gerado um `novo_arquivo.bib` aqui, com a mesma data e horário do relatório correspondente a mesma execução.
 - *screenshots:* Pasta com as imagens de exemplo que constam neste arquivo `README.md`.
 
+Dentro das pastas há arquivos utilizados para testar o funcionamento do script. Depois de tudo configurado, você pode executar o script sem realizar nenhuma alteração no `config.json` e deve ser gerado um relatório e um `novo_arquivo.bib` com as informações de teste.
+
 O arquivo principal `grb.py` é o script que realiza todo o processamento e verificações do seu `arquivo.bib`.
 
 Para fazer uso do GRB você não precisa mexer no script. A sua edição só é estimulada, caso pretenda contribuir com melhorias e refatorações no código. Caso contrário, qualquer mudança pode ocasionar mal funcionamento na geração dos `relatórios de erros` e do `novo_arquivo.bib`.
@@ -124,9 +128,12 @@ Com os parâmetros devidamente configurados, você já pode fazer a execução d
 (virtual_1) C:\Users\user\Desktop\GenerateReportBib>python grb.py
 ```
 
-Se no console do seu Terminal aparecer a mensagem: `Exporting to arquivo.html`, significa que o script executou sem problemas. No entanto, isso não significa que o processo encerra aqui. O script gera mais de um tipo de relatório, portanto, para verificar quais foram os problemas encontrados, acesse a pasta `GenerateReports` e busque pelo arquivo `report.html`. O nome do relatório é gerado com a data e horário da execução do script, por exemplo: `_Report_2020-05-19_15-11-05.html`.
+Se no console do seu Terminal aparecer a mensagem: `Exporting to <arquivo.html>`, significa que o script executou sem problemas. No entanto, isso não significa que o processo encerra aqui. O script gera mais de um tipo de relatório, portanto, para verificar quais foram os problemas encontrados, acesse a pasta `GenerateReports` e busque pelo arquivo `report.html`. O nome do relatório é gerado com a data e horário da execução do script, por exemplo: `_Report_2020-05-19_15-11-05.html`.
 
-### Possíveis situações de relatórios de erros
+Por padrão, este arquivo é gerado com extensão `.html` dentro da pasta `GenerateReports`. No entanto, se no momento da conversão para `.html`, o `arquivo.bib` original estiver em uma codificação diferente de `utf-8`, será apresentado um erro no console do Terminal (especificando o/os caracter(es) que não foram identificados pela codificação `utf-8`). Desta forma, o relatório ainda será gerado, só que não mais no formato `.html`, mas sim no formato `.md (markdown)`, na mesma pasta dos relatórios: `GenerateReports`.
+  - *Sugestão:* para abrir o arquivo `.md` você pode utilizar a ferramenta [`Visual Studio Code (VSC)`](https://code.visualstudio.com/). Depois que abrir o arquivo no VSC, procure por um botão com uma lupa, localizado no canto superior direito, que o arquivo será apresentado no formato visual 'compilado'.
+
+### Possíveis Situações de Relatórios de Erros
 
 Enquanto houverem problemas no `config.json` ou no seu `arquivo.bib`, serão gerados relatórios de erros e não gerá gerado o `novo_arquivo.bib`.
 
@@ -138,7 +145,7 @@ Caso os parâmetros do arquivo de configuração não tenham sido preenchidos de
 
 Caso o seu `arquivo.bib` esteja com algum problema, o script ficará gerando relatórios de erros, até que o mesmo seja corrigido. Possíveis problemas no `arquivo.bib`, encontrados durante os testes, que geram problemas:
 
-- Quando há labels de referências repetidos, como por exemplo:
+- Quando há labels de referências repetidos, como por exemplo `(olimar2020)`:
 
 ```
 @article{olimar2020,
@@ -160,28 +167,46 @@ Caso o seu `arquivo.bib` esteja com algum problema, o script ficará gerando rel
 }
 ```
 
-- Quando, em qualquer citação, haja a tag `month={}` preenchida com um mês 'não válido' OU vazio. Os meses precisam estar, obrigatoriamente, em inglês e abreviados até a terceira letra (podendo estar escitos em minúsculo ou maiúsculo). Mesmo que a sua Dissertação ou Tese esteja em português.
+- Quando, em qualquer citação, houver a tag `month={}` preenchida com um mês 'não válido' OU vazio. Os meses precisam estar, obrigatoriamente, em inglês e abreviados até a terceira letra (podendo estar escitos em minúsculo ou maiúsculo). Mesmo que a sua Dissertação ou Tese esteja em português.
   * `Esta é uma restrição do pacote` **_pybtex_** `utilizado neste projeto. Infelizmente, não foi possível corrigir esta questão até o momento.`
 
-- Os labels programados para funcionarem neste script são: _`@book, @article, @inproceedings @proceedings, @mastersthesis, @phdthesis, @techreport, @misc, @booklet, @inbook, incollection`_. Qualquer outro label de referência que estiver dentro do `arquivo.bib`, gerará um relatório de erro.
+- Os labels programados para funcionarem neste script são: _`@book, @article, @inproceedings @proceedings, @mastersthesis, @phdthesis, @techreport, @misc, @booklet, @inbook, incollection`_. Qualquer outro label de referência que estiver dentro do `arquivo.bib`, gerará um relatório de erro. Esta restrição se deve, pois são estes labels que estão definidos na padronização utilizada no documento de referências do PPGCC. Demais tags não são previstas, portanto, não são tratadas. Para que o script funcione, sugiro retirar estes labels do `arquivo.bib` e executar novamente o script.
 
-Veja um exemplo de relatório que não gera o `novo_arquivo.bib`, devido aos erros mencionados anteriormente:
+Veja um exemplo de relatório que não gera o `novo_arquivo.bib`, devido a alguns dos erros mencionados anteriormente:
+
 
 ![](screenshots/reportErrorOriginalBIB.PNG)
 
-### Relatório com os avisos
+### Principais Relatórios
 
-Este relatório é o principal deste projeto! Ele é gerado quando não há erros nos arquivos `config.json` e `arquivo.bib`.
+Quando tudo ocorrer de acordo, ao executar o script, você consigará emitir relatórios que servirão como auxílio para a correção das suas referências. Entenda os relatórios para que eles possam realmente ajudar você nesse processo de correção das referências.
 
-Neste relatório é apresentado as validações que o script realizou. Para cada uma das referências do `arquivo.bib`, que for identificado alguma inconsistência, será listada a referência e o aviso que deve ser verificado. No coluna `Warning` consta as descrições que devem ser corrigidas. Veja o screenshot de exemplo de um relatório de avisos final:
+#### Relatório com os Avisos
+
+Este relatório é o principal deste projeto! Ele é gerado quando não há mais erros nos arquivos `config.json` e `arquivo.bib`.
+
+Neste relatório é apresentado as validações que o script realizou. Para cada uma das referências do `arquivo.bib`, que for identificado alguma inconsistência, será listada a referência e o aviso correspondente. No coluna `Warning` consta as descrições, destes avisos, que devem ser corrigidos. Veja o screenshot de exemplo de um relatório de avisos final:
 
 ![](screenshots/reportWarning.PNG)
 
+Entenda alguns dos possíveis `Warnings` que poderão ser gerados em seu relatório:
+
+- _Type not implemented:_: Este erro é `muito importante`, pois ele IMPEDE que seja gerado o `novo_arquivo.bib`, enquanto a(as) tag(s) que não são válidas, não forem retiradas.
+  - **Dica:** Antes de iniciar as correções em seu `arquivo.bib`, corrija estes 'problemas' do tipo `Type not implemented`, deixando apenas as tags válidas e execute o script novamente. Desta forma, o `novo_arquivo.bib` também será gerado!
+  - O screenshot a seguir apresenta um relatório com erro de `_New .bib file was not generated! Invalid tags have been identified in your .bib._`, que foi gerado pelo _Type not implemented:_
+  ![](screenshots/bibNotGenerate.PNG)
+
+- _Failed Month and Year: year={Mon, Year} check_: Em referências no estilo `apa`, para citações do tipo `@article`, o mês e ano precisam constar juntos dentro da mesma tag `year={Mon, Year}`.
+- _Failed Month month={ Mon } check_: Em referências no estilo `num` ou `alpha`, para citações do tipo `@article`, a informação de `month={}` e `year={}` também são obrigatórios, mas no entanto, devem ser inseridas em suas respectivas tags individuais.
+- _The { tag } field takes no YEAR information_: A informação do ano só deve constar dentro da tag `year={}` e não junto com o nome da Conferência ou Journal.
+- _Field { tag } is not capitalized_: Os nomes das conferênicias, jornauls, editora e etc, devem estar capitalizados, ou seja, sempre a primeira letra de cada palavras precisa estar em maiúsculo.
+- _Missing: { tags }_: As tags informadas dentro dos `{}` são de preenchimento obrigatório para a determinada citação. Além desse aviso, estas tags são identificadas e inseridas no `novo_arquivo.bib` para determinada referência e junto é adicionado o valor `'MISSING'`. Desta forma, rapidamente é possível identificar quais tags precisam ser preenchidas com as informações obrigatórias.
+
 #### Novo arquivo.bib
 
-Junto com este relatório dos avisos, é gerado um `novo_arquivo.bib`. Neste arquivo, para as referências que possuírem `campos faltantes`, será inserido neste novo arquivo a tag faltante e o valor `MISSING`, para que seja possível buscar rapidamente por esta palavra e fazer a adequação (inserir a informação que falta).
+Junto com este relatório dos avisos, é gerado um `novo_arquivo.bib` (quando não ocorrem os problemas já descritos anteriormente). Neste arquivo, para as referências que possuírem `campos faltantes` (`Missing: { tags }`), será inserido neste novo arquivo a tag faltante e o valor `MISSING`, para que seja possível buscar rapidamente (por esta palavra) e fazer a adequação (inserir a informação que falta).
 
-Por exemplo, caso no `arquivo.bib` conste a seguinte referência, com a configuração `english` e `num-alpha`:
+Por exemplo, caso no `arquivo.bib` original conste a seguinte referência, com a configuração `english` e `num-alpha`:
 
 ```
 @book{LabelDaCitacao,
@@ -192,7 +217,7 @@ Por exemplo, caso no `arquivo.bib` conste a seguinte referência, com a configur
 }
 ```
 
-No arquivo de relatório será apresentada para esta referênicia a mensagem: `Missing: {'publisher', 'numpages'}`. Já que os campos obrigatórios para livros no estilo `num-alpha` são: `{'author', 'title', 'publisher', 'year', 'numpages'}`. E além desta informação, será gerado no `novo_arquivo.bib` a seguinte referência:
+No arquivo de relatório será apresentada para esta referênicia a mensagem: `Missing: {'publisher', 'numpages'}`. Já que os campos obrigatórios para livros no estilo `num-alpha` são: `{'author', 'title', 'publisher', 'year', 'numpages'}`. Desta forma, será gerado no `novo_arquivo.bib` a seguinte referência:
 
 ```
 @book{LabelDaCitacao,
@@ -205,12 +230,18 @@ No arquivo de relatório será apresentada para esta referênicia a mensagem: `M
 }
 ```
 
-Para cada referência com campos faltantes, será gerada uma correspondente neste novo arquivo, com a `tag={MISSING}`.
+Para cada referência com campos faltantes, será gerada uma tag correspondente neste novo arquivo, com: `tag={MISSING}`.
 
-### LEMBRE-SE!
+##### LEMBRE-SE!
 
-**Devido à restrição mencionada anteriormente do pacote `pybtex`, as informações dos meses precisam estar dentro das definições da biblioteca. Neste caso, se você estiver escrevendo seu volume em português e precise fazer a adequação dos meses (colocá-los em inglês) no seu `arquivo.bib` para que executar este script, lembre-se de voltar os meses para o português na versão final.**
+**Devido à restrição mencionada anteriormente do pacote `pybtex`, as informações dos meses precisam estar dentro das definições desta biblioteca (pybtex). Neste caso, se você estiver escrevendo seu volume em português e precise fazer a adequação dos meses (colocá-los em inglês) no seu `arquivo.bib`, para executar este script, lembre-se de voltar os meses para o português na versão final. Para que não fique errado no momento da compilação lá no seu arquivo LaTeX.**
 
+
+### Relatório 'PARA-BÉNS'
+
+Este relatório será gerado quando não houverem inconsistências definidas neste projeto. Ele não é necessariamente uma garantia de que suas referênicias estão totalmente de acordo. É de responsabilidade do(a) pesquisador(a) verificr sua próprias citações. A seguir, veja o screenshot deste relatório:
+
+![](screenshots/reportCongrats.PNG)
 
 ## Agradecimentos
 Agradecimento ao ex-colega e amigo [Pedro Ballester](https://github.com/Ballester) pela disponibilização do código embrião deste projeto!

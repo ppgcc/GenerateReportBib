@@ -1,7 +1,7 @@
 {
     "Comentários": [
 		"Os comentários a seguir são instruções de preenchimento dos campos lá embaixo:",
-        "NAME-FILE: Preencha com o nome do teu arquivo.bib (NÃO UTILIZE EXTENSÃO) que precisa estar localizado na pasta 'BIBs_Original'.",
+        "NAME-FILE: Preencha com o nome do teu arquivo.bib (NÃO UTILIZE EXTENSÃO) que precisa estar localizado na pasta 'OriginalBIB'.",
         "LANGUAGE: Idioma da Dissertação ou Tese. Para PORTUGUÊS utilize: 'portuguese' / Para INGLÊS utilize: 'english')",
         "TYPE_REFERENCES: Tipo das referências. Para NUM ou ALPHA utilize: 'num-alpha' / Para APALIKE utilize: 'apa'"
 	],

@@ -297,11 +297,23 @@ def main():
             file.write(lineCongrat2)
 
     file.close()
+
     shutil.copyfile("results.txt", NAME_FILE_OUTPUT_REPORT_MD)
+
     command = "grip "+NAME_FILE_OUTPUT_REPORT_MD+" --export "+NAME_FILE_OUTPUT_REPORT_HTML
     os.system(command)
 
-    shutil.copyfile(NAME_FILE_OUTPUT_REPORT_HTML, path_reports+NAME_FILE_OUTPUT_REPORT_HTML)
+    del_html = False
+    file_html = open(NAME_FILE_OUTPUT_REPORT_HTML, "rt")
+    contents = file_html.read()
+    if '500 Internal Server Error' in contents:
+        del_html = True
+    file_html.close()
+
+    if del_html == True:
+        shutil.copyfile(NAME_FILE_OUTPUT_REPORT_MD, path_reports+NAME_FILE_OUTPUT_REPORT_MD)
+    else:
+        shutil.copyfile(NAME_FILE_OUTPUT_REPORT_HTML, path_reports+NAME_FILE_OUTPUT_REPORT_HTML)
 
     if os.path.exists("results.txt"):
         os.remove("results.txt")
@@ -309,6 +321,7 @@ def main():
         os.remove(NAME_FILE_OUTPUT_REPORT_MD)
     if os.path.exists(NAME_FILE_OUTPUT_REPORT_HTML):
         os.remove(NAME_FILE_OUTPUT_REPORT_HTML)
+
 
 def regenerate_bib(bib, REQ):
     tag_inv = False
