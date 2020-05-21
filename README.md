@@ -124,11 +124,11 @@ Para fazer uso do script, inicialmente copie o seu `arquivo.bib` para dentro a p
 
 A partir desse momento, será necessário configurar alguns parâmetros que serão utilizados para executar o script. Preencha os parâmetros corretamente, seguindo as restrições de preenchimento especificadas a seguir:
 
-- **<arquivo.bib>:** Preencha com o nome do seu `arquivo.bib` original que precisa, obrigatoriamente, estar localizado na pasta `OriginalBIB`.",
+- **\<arquivo.bib>:** Preencha com o nome do seu `arquivo.bib` original que precisa, obrigatoriamente, estar localizado na pasta `OriginalBIB`.",
 
-- **<idioma>:** Idioma da sua Dissertação ou Tese. Para PORTUGUÊS utilize: `portuguese` / Para INGLÊS utilize: `english`)",
+- **\<idioma>**: Idioma da sua Dissertação ou Tese. Para PORTUGUÊS utilize: `portuguese` / Para INGLÊS utilize: `english`)",
 
-- **<tipo>:** Tipo das suas referências. Para estilos NUM ou ALPHA utilize: `num` ou `alpha` / Para o estilo APALIKE utilize: `apa`"
+- **\<tipo>:** Tipo das suas referências. Para estilos NUM ou ALPHA utilize: `num` ou `alpha` / Para o estilo APALIKE utilize: `apa`"
 
 Com os parâmetros devidamente configurados, você já pode fazer a execução do script. Para isso, abra o Terminal na linha de comando do seu projeto e execute o script substituindo os valores `<parâmetro>` pelas suas informações:
 
