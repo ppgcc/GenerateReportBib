@@ -37,17 +37,14 @@ path_bib = os.path.join(path_current, "GenerateBIB")
 def main():
 
     LANGUAGES = {
-    "english": "english",
-    "portuguese": "portuguese",
+    "en": "english",
+    "pt": "portuguese",
     }
 
     TYPES = {
-        "num-alpha" : "num-alpha",
         "num": "num-alpha",
-        "numeric": "num-alpha",
         "alpha": "num-alpha",
         "apa": "apa",
-        "apalike" : "apa",
     }
 
     #arguments entered via the command line
@@ -59,7 +56,7 @@ def main():
         "-L",
         "--language",
         choices=LANGUAGES.keys(),
-        help="Select a language { 'english' or 'portuguese' }",
+        help="Select a language { 'en' or 'pt' }",
         default="english",
     )
     argparser.add_argument(
@@ -69,18 +66,30 @@ def main():
         help="Select a type { 'num', 'alpha' or 'apa' }",
         default="num",
     )
-    args = argparser.parse_args()
 
     #for test
-    #LANGUAGE = 'english'
-    #TYPE_REFERENCES = 'apa'
-    #FILE_NAME = 'referencesTest.bib'
+    '''
+    LANGUAGE = 'en'
+    print('LANGUAGE: ', LANGUAGE)
+    LANGUAGE = LANGUAGES[LANGUAGE]
 
+    TYPE_REFERENCES = 'num'
+    print('TYPE_REFERENCES: ', TYPE_REFERENCES)
+    TYPE_REFERENCES = TYPES[TYPE_REFERENCES]
+
+    FILE_NAME = 'PT-literature_t.bib'
+    print('FILE_NAME: ', FILE_NAME)
+    '''
+    #production
+
+    args = argparser.parse_args()
     LANGUAGE = args.language
     print('LANGUAGE: ', LANGUAGE)
+    LANGUAGE = LANGUAGES[LANGUAGE]
 
     TYPE_REFERENCES = args.type
     print('TYPE_REFERENCES: ', TYPE_REFERENCES)
+    TYPE_REFERENCES = TYPES[TYPE_REFERENCES]
 
     FILE_NAME = args.filename
     print('FILE_NAME: ', FILE_NAME)
@@ -89,7 +98,7 @@ def main():
     NAME_FILE_OUTPUT_REPORT_HTML = FILE_NAME[:-4] +"_Report_" + label_date + ".html"
     NAME_FILE_OUTPUT_BIB = FILE_NAME[:-4] + "_" + label_date + ".bib"
 
-    file = open("results_temp.txt","w+")
+    file = open("results_temp.txt","w+",encoding="utf-8")
 
     lineHeader1 = "# References Report: " + str(label_date) + '\r'
     lineHeader2 = "## - Configurations: _Bib File:_ **"+ FILE_NAME +"** / _Language:_ **"+ LANGUAGE +"** / _Type References:_ **"+ TYPE_REFERENCES +"**\r\n"
@@ -100,87 +109,97 @@ def main():
     # If repeated bibliograhpy entry or others erros
     msg_erros = ''
     stop = True
-    read_error = False
-    pass_language = False
+    read_error_bib = False
+    error_command_line = False
+    file_found = False
+    #pass_language = False
 
     count = 0
     while stop == True:
         try:
-
+            '''
             assert LANGUAGE in ['english', 'portuguese']
-            pass_language == True
+            pass_language = True
             assert TYPE_REFERENCES in ['apa', 'num-alpha']
+            '''
 
             if os.path.exists("refer_find_errors_generate_temp.bib") == False:
                 with os.scandir(path_bib_original) as entries:
                     for entry in entries:
                         if entry.name == FILE_NAME:
                             shutil.copyfile(os.path.join(path_bib_original, FILE_NAME), 'refer_find_errors_generate_temp.bib')
+                            file_found = True
                             break
 
-            bib_data = parse_file('refer_find_errors_generate_temp.bib')
+            if file_found == True:
+                bib_data = parse_file('refer_find_errors_generate_temp.bib')
+            else:
+                error_command_line = True
+                msg_erros += '- ## The name of the .bib file set as a parameter on the command line was not found in the bib file folder. '
+                msg_erros += 'Check if it is actually in the folder (OriginalBIB) or if the file name was spelled correctly in the parameter.\r'
+
             stop = False
         except FileNotFoundError as identifier:
-            read_error = True
-            msg_erros += '- ## The file name defined in the [FILE-NAME] parameter of the `config.json` file was not found in the bib files folder. '
-            msg_erros += 'Check if it is actually in the folder (OriginalBIB) or if the file name was spelled correctly in the parameter. '
-            msg_erros += 'Remember to NOT specify the extension (.bib) in the config.json file : ' + str(identifier) + '\r'
+            error_command_line = True
+            msg_erros += '- ## The name of the .bib file set as a parameter on the command line was not found in the bib file folder. '
+            msg_erros += 'Check if it is actually in the folder (OriginalBIB) or if the file name was spelled correctly in the parameter.\r'
             stop = False
+            '''
+            except AssertionError as identifier:
+                error_command_line = True
 
-        except AssertionError as identifier:
-            read_error = True
+                if pass_language == True:
+                    msg_erros += '- ## The value defined in the parameter of your reference type is not valid. '
+                    msg_erros += 'Valid values: [`num`, `alpha` or `apa`].\r'
+                else:
+                    msg_erros += '- ## The value defined in your reference language parameter is not valid. '
+                    msg_erros += 'Valid values: [`en` or `pt`].\r'
 
-            if pass_language == True:
-                msg_erros += '- ## The value defined in the `[TYPE_REFERENCES]` parameter of the `config.json` file is not valid. '
-                msg_erros += 'Valid values: [`apa` or `num-alpha`].' + str(identifier) + '\r'
-            else:
-                msg_erros += '- ## The value defined in the `[LANGUAGE]` parameter of the `config.json` file is not valid. '
-                msg_erros += 'Valid values: [`english` or `portuguese`].' + str(identifier) + '\r'
-
-            stop = False
+                stop = False
+            '''
         except BibliographyDataError as identifier:
-            read_error = True
+            read_error_bib = True
 
             count+=1
             msg_erros += '- ## ' + str(identifier) + '\r'
             tag_rep = str(identifier).split(':')
 
             #input file
-            fin = open("refer_find_errors_generate_temp.bib", "rt")
+            fin = open("refer_find_errors_generate_temp.bib", "rt",encoding="utf-8")
             contents = fin.read().replace(str(tag_rep[1]).strip(), str(tag_rep[1]).strip()+str(count), count)
             fin.close()
 
-            fin = open("refer_find_errors_generate_temp.bib", "w+")
+            fin = open("refer_find_errors_generate_temp.bib", "w+",encoding="utf-8")
             fin.write(contents)
             fin.close()
 
         except UndefinedMacro as identifier:
-            read_error = True
+            read_error_bib = True
             erro = identifier.args[0]
             msg_erros += '- ## ' + str(identifier) + '\r'
 
             #input file
-            fin = open("refer_find_errors_generate_temp.bib", "rt")
+            fin = open("refer_find_errors_generate_temp.bib", "rt",encoding="utf-8")
             contents = fin.read().replace(erro, 'JAN')
             fin.close()
 
-            fin = open("refer_find_errors_generate_temp.bib", "w+")
+            fin = open("refer_find_errors_generate_temp.bib", "w+",encoding="utf-8")
             fin.write(contents)
             fin.close()
 
         except TokenRequired as identifier:
-            read_error = True
+            read_error_bib = True
             erro = identifier.args[0]
             value_new = ''
 
             msg_erros += '## - ' + str(identifier) + '\r'
 
             #input file
-            fin = open("refer_find_errors_generate_temp.bib", "rt")
+            fin = open("refer_find_errors_generate_temp.bib", "rt",encoding="utf-8")
             contents = fin.read().replace(erro, value_new)
             fin.close()
 
-            fin = open("refer_find_errors_generate_temp.bib", "w+")
+            fin = open("refer_find_errors_generate_temp.bib", "w+",encoding="utf-8")
             fin.write(contents)
             fin.close()
             stop = False
@@ -188,32 +207,32 @@ def main():
     if os.path.exists("refer_find_errors_generate_temp.bib"):
         os.remove("refer_find_errors_generate_temp.bib")
 
-
     # ===========================================================
 
-    if read_error == True:
-        line1 = '# Error reading your .bib file!\r\n'
-        line2 = '### Errors may be related:\r'
-        line3 = '- the label of repeated references. Repeated entries will be listed below. '
-        line4 = 'Check the labels (tags) used before continuing to run the report.\r'
-        line5 = '- information for month={WRONG}. This field must always be filled in English (even if its volume is in Portuguese), '
-        line6 = 'nor can it be empty. '
-        line7 = '(_Accepted formats: [Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec]_)\r\n'
-        line8 = '# Errors found:\r'
+    if read_error_bib == True:
+        line = '# Error reading your .bib file!\r\n'
+        line += '### Errors may be related:\r'
+        line += '- the label of repeated references. Repeated entries will be listed below. '
+        line += 'Check the labels (tags) used before continuing to run the report.\r'
+        line += '- information for month={WRONG}. This field must always be filled in English (even if its volume is in Portuguese), '
+        line += 'nor can it be empty. '
+        line += '(_Accepted formats: [Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec]_)\r\n'
+        line += '## Errors found:\r'
 
-        line9 = '#### *Warning:* Correct repeated entries or month information in your original .bib file. '
-        line10 = 'Afterwards, run this script again to generate the error report. \r'
-        file.write(line1)
-        file.write(line2)
-        file.write(line3)
-        file.write(line4)
-        file.write(line5)
-        file.write(line6)
-        file.write(line7)
-        file.write(line8)
+        line_footer = '#### *Warning:* Correct repeated entries or month information in your original .bib file. '
+        line_footer += '#### Afterwards, run this script again to generate the error report. \r'
+        file.write(line)
         file.write(msg_erros+'\r\n')
-        file.write(line9)
-        file.write(line10)
+        file.write(line_footer)
+
+    elif error_command_line == True:
+        line = '# Error trying to run your command line.!\r\n'
+        line += '## Errors found:\r'
+
+        line_footer = '#### Afterwards, run this script again to generate the error report. \r'
+        file.write(line)
+        file.write(msg_erros+'\r\n')
+        file.write(line_footer)
 
     else:
         MONTHS_ENG_VALID = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -232,7 +251,7 @@ def main():
         elif LANGUAGE == 'portuguese' and TYPE_REFERENCES == 'num-alpha':
             MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
-        assert TYPE_REFERENCES in ['apa', 'num-alpha']
+        assert TYPE_REFERENCES in ['apa', 'num', 'alpha', 'num-alpha']
         if TYPE_REFERENCES == 'num-alpha':
             REQ = {
                 'book': {'author', 'title', 'publisher', 'year', 'numpages'},
@@ -293,12 +312,14 @@ def main():
                 file.write(line)
 
         if tag_inv_global == False:
+
             file_bib = open(os.path.join(path_bib, NAME_FILE_OUTPUT_BIB),"w+", encoding="utf-8")
+
             file_bib.write(bib_data.to_string('bibtex'))
             file_bib.close()
 
             if LANGUAGE == 'portuguese':
-                fin = open(os.path.join(path_bib, NAME_FILE_OUTPUT_BIB), "rt+")
+                fin = open(os.path.join(path_bib, NAME_FILE_OUTPUT_BIB), "rt+",encoding="utf-8")
                 contents = ''
                 for index, month in enumerate(MONTHS_ENG_VALID):
                     month_pt = MONTHS_PORT_VALID[index].upper()
@@ -306,7 +327,7 @@ def main():
 
                 fin.close()
 
-                fin = open(os.path.join(path_bib, NAME_FILE_OUTPUT_BIB), "w+")
+                fin = open(os.path.join(path_bib, NAME_FILE_OUTPUT_BIB), "w+",encoding="utf-8")
                 fin.write(contents)
                 fin.close()
 
@@ -347,7 +368,7 @@ def main():
 
     del_html = False
     if os.path.exists(NAME_FILE_OUTPUT_REPORT_HTML):
-        file_html = open(NAME_FILE_OUTPUT_REPORT_HTML, "rt")
+        file_html = open(NAME_FILE_OUTPUT_REPORT_HTML, "rt",encoding="utf-8")
         contents = file_html.read()
 
         if '500 Internal Server Error' in contents:
@@ -513,20 +534,29 @@ def check_parentheses_and_capitalize(phrase):
     words_aux = []
 
     uncapitalized = False
+    hif = False
+    word2 = ''
 
     if language == 'pt':
         for word in words:
             if word not in LIST_STOPWORDS_PORTUGUESE:
                 if "-" in word:
+                    hif = True
                     words_hifen = word.split('-')
                     word = words_hifen[0]
-
+                    word2 = words_hifen[1]
                 if word.isupper() == False:
                     if word != word.capitalize():
                         uncapitalized = True
-                        words_aux.append(word.capitalize())
+                        if hif == True:
+                            words_aux.append(word.capitalize()+"-"+word2)
+                        else:
+                            words_aux.append(word.capitalize())
                     else:
-                        words_aux.append(word)
+                        if hif == True:
+                            words_aux.append(word+"-"+word2)
+                        else:
+                            words_aux.append(word)
                 else:
                     words_aux.append(word)
             else:
@@ -534,17 +564,25 @@ def check_parentheses_and_capitalize(phrase):
 
     else:
         for word in words:
+            hif = False
             if word not in LIST_STOPWORDS_ENGLISH:
                 if "-" in word:
+                    hif = True
                     words_hifen = word.split('-')
                     word = words_hifen[0]
-
+                    word2 = words_hifen[1]
                 if word.isupper() == False:
                     if word != word.capitalize():
                         uncapitalized = True
-                        words_aux.append(word.capitalize())
+                        if hif == True:
+                            words_aux.append(word.capitalize()+"-"+word2)
+                        else:
+                            words_aux.append(word.capitalize())
                     else:
-                        words_aux.append(word)
+                        if hif == True:
+                            words_aux.append(word+"-"+word2)
+                        else:
+                            words_aux.append(word)
                 else:
                     words_aux.append(word)
             else:

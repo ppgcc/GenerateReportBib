@@ -52,13 +52,13 @@ pip install virtualenv
 ```
 
 Em seguida, crie uma pasta para armazenar as suas máquinas virtuais (você pode fazer a criação da pasta pela interface gráfica do seu SO, se preferir):
-```bash
+```
 C:\Users\user\Desktop> mkdir <virtualenv>
 ```
 Substitua `<virtualenv>` pelo nome da pasta. Neste exemplo, a pasta será `virtualenv`. Lembre-se do caminho aonde você está com a linha de execução do ser Terminal (`C:\Users\user\Desktop`, por exemplo).
 
 Crie um ambiente virtual para executar o Python:
-```bash
+```
 C:\Users\user\Desktop> virtualenv virtualenv\virtual_1
 ```
 
@@ -67,37 +67,32 @@ Ative o ambiente virtual:
 virtualenv\virtual_1\Scripts\activate
 ```
 
-Agora, antes da linha de comando, aparecerá uma flag (virtual_1) dizendo que você está usando o virtual env 'virtual_1':
-```bash
+Agora, antes da linha de comando, aparecerá um flag (virtual_1) dizendo que você está usando o virtual env 'virtual_1':
+```
 (virtual_1) C:\Users\user\Desktop>
 ```
 A partir daqui, você pode começar a instalar as bibliotecas que desejar. Para este projeto, vamos fazer uso do gerenciador `pip` para instalar alguns pacotes.
 
 ## Dependências do projeto
 
-Neste momento, acesse o local onde o projeto foi baixado, por exemplo:
+Neste momento, acesse o local aonde o projeto foi baixado, por exemplo:
 
-```bash
-(virtual_1) > cd GenerateReportBib
-(virtual_1) GenerateReportBib>
+```
+(virtual_1) C:\Users\user\Desktop> cd GenerateReportBib
+(virtual_1) C:\Users\user\Desktop\GenerateReportBib>
 ```
 
 Para que o projeto funcione, antes você precisa instalar alguns pacotes. Para facilitar este processo, execute o comando abaixo que ele importará todos os pacotes de uma só vez:
 
-```bash
-(virtual_1) GenerateReportBib> pip install -r requirements.txt
 ```
-
-Como o projeto utiliza o recurso de stopwords do nltk, precisamos instalar isto através dos script:
-```bash
-(virtual_1) GenerateReportBib> python nltk_config.py
+(virtual_1) C:\Users\user\Desktop\GenerateReportBib> pip install -r requirements.txt
 ```
 
 * Os pacotes listados no `requirements.txt` foram suficientes para que o projeto funcionasse no Windows 10 e no Ubuntu 19.10, no entanto, ao executar o GRB, caso seja necessário a instalação de mais algum pacote, aparecerá listado no Terminal o seu respectivo nome. A partir dele, faça a instalação utilizando o `pip`.
 
 Em seguida instale o pacote de `stopwords` da biblioteca `NLTK`. Este pacote serve para fazer a verificação e correção de capitalização nos campos referentes a nomes de connferências, journals, editoras e etc:
 
-```bash
+```
 (virtual_1) C:\Users\user\Desktop\GenerateReportBib> python -m nltk.downloader stopwords
 ```
 
@@ -124,21 +119,21 @@ Para fazer uso do script, inicialmente copie o seu `arquivo.bib` para dentro a p
 
 A partir desse momento, será necessário configurar alguns parâmetros que serão utilizados para executar o script. Preencha os parâmetros corretamente, seguindo as restrições de preenchimento especificadas a seguir:
 
-- **\<arquivo.bib>:** Preencha com o nome do seu `arquivo.bib` original que precisa, obrigatoriamente, estar localizado na pasta `OriginalBIB`.",
+- **<arquivo.bib>:** Preencha com o nome do seu `arquivo.bib` original que precisa, obrigatoriamente, estar localizado na pasta `OriginalBIB`.",
 
-- **\<idioma>**: Idioma da sua Dissertação ou Tese. Para PORTUGUÊS utilize: `portuguese` / Para INGLÊS utilize: `english`)",
+- **<idioma>:** Idioma da sua Dissertação ou Tese. Para PORTUGUÊS utilize: `pt` / Para INGLÊS utilize: `en`)",
 
-- **\<tipo>:** Tipo das suas referências. Para estilos NUM ou ALPHA utilize: `num` ou `alpha` / Para o estilo APALIKE utilize: `apa`"
+- **<tipo>:** Tipo das suas referências. Para estilos NUM ou ALPHA utilize: `num` ou `alpha` / Para o estilo APALIKE utilize: `apa`"
 
-Com os parâmetros devidamente configurados, você já pode fazer a execução do script. Para isso, abra o Terminal na linha de comando do seu projeto e execute o script substituindo os valores `<parâmetro>` pelas suas informações:
+Com os parâmetros devidamente configurados, você já pode fazer a execução do script. Para isso, abra o Terminal na linha de comando do seu projeto e execute o script substituindo os valores `<parametro>` pelas suas informações:
 
-```bash
+```
 (virtual_1) C:\Users\user\Desktop\GenerateReportBib>python grb.py <arquivo.bib> -L <idioma> - T <tipo>
 ```
 
 Exemplo de execução:
 ```
-python grb.py referencesTest.bib -L english -T apa
+python grb.py referencesTest.bib -L en -T apa
 ```
 
 As tags `-L` e `-T` precisam ser especificadas junto com a execução, pois elas identificam a linguagem da sua dissertação ou tese e o tipo dela, respectivamente.
@@ -146,7 +141,7 @@ As tags `-L` e `-T` precisam ser especificadas junto com a execução, pois elas
 Por exemplo, se após a execução do script aparecer no seu Terminal mensagens parecidas com:
 
 ```
-LANGUAGE:  english
+LANGUAGE:  en
 TYPE_REFERENCES:  apa
 FILE_NAME:  referencesTest.bib
 Exporting to referencesTest_Report_2020-05-20_19-20-39.html
@@ -167,7 +162,9 @@ Neste tópico, serão apresentados algumas situações que podem gerar erro na e
 
 #### Erro nos parâmetros do script
 
-Enquanto os parâmetros da execução do script não forem preenchidos corretamente, conforme instruções e restrições acima, o script não funcionará. Será apresentado no console algumas mensagens informando quais parâmetros ele está esperando.
+Enquanto os parâmetros da execução do script não forem preenchidos corretamente, conforme instruções e restrições acima, o script não funcionará. Será apresentado no console algumas mensagens informando quais parâmetros ele está esperando. Além disso, caso o `arquivo.bib` definido na linha de comando não for válido, o seguinte relatório de erros pode ser gerado:
+
+![](screenshots/reportErrorComLine.PNG)
 
 #### Erro no arquivo.bib
 
@@ -235,7 +232,7 @@ Junto com este relatório dos avisos, é gerado um `novo_arquivo.bib` (quando n�
 
 Em relação aos três últimos erros listados anteriormente (_The { tag } field takes no year information_, _Field { tag } is not capitalized_ e _Missing: { tags }_), no arquivo `novo_arquivo.bib`, eles serão 'corrigidos' e apresentados. Em relação ao primeiro erro, o ano será retirado da informação da tag. No segundo o nome que antes não estava capitalizado, será capitalizado. E no terceiro, as tags que estavam faltando serão adicionadas junto ao valor `'MISSING'`. Desta forma, rapidamente será possível identificar quais tags precisam ser preenchidas com as informações obrigatórias.
 
-Por exemplo, caso no `arquivo.bib` original conste a seguinte referência, com a configuração `english` e `num-alpha`:
+Por exemplo, caso no `arquivo.bib` original conste a seguinte referência, com a configuração `en` e `num` ou `alpha`:
 
 ```
 @book{LabelDaCitacao,
@@ -247,7 +244,7 @@ Por exemplo, caso no `arquivo.bib` original conste a seguinte referência, com a
 }
 ```
 
-No arquivo de relatório será apresentada para esta referênicia a mensagem: `Missing: {'numpages'}`. Já que os campos obrigatórios para livros no estilo `num-alpha` são: `{'author', 'title', 'publisher', 'year', 'numpages'}`. Além disso, a tag `publisher` deve estar capitalizada. Desta forma, será gerado no `novo_arquivo.bib` a seguinte referência:
+No arquivo de relatório será apresentada para esta referênicia a mensagem: `Missing: {'numpages'}`. Já que os campos obrigatórios para livros no estilo `num` ou `alpha` são: `{'author', 'title', 'publisher', 'year', 'numpages'}`. Além disso, a tag `publisher` deve estar capitalizada. Desta forma, será gerado no `novo_arquivo.bib` a seguinte referência:
 
 ```
 @book{LabelDaCitacao,
