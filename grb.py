@@ -4,6 +4,7 @@ import shlex
 import json
 import shutil
 import nltk
+import argparse
 
 from langdetect import detect
 from pathlib import Path
@@ -18,46 +19,80 @@ from nltk.corpus import stopwords
 now = datetime.now()
 label_date = str(date.today()) + now.strftime("_%H-%M-%S")
 
-con_file = open("config.json")
-config = json.load(con_file)
-con_file.close()
-LANGUAGE = config['LANGUAGE']
-TYPE_REFERENCES = config['TYPE_REFERENCES']
-NAME_FILE = config['NAME-FILE'] + ".bib"
-NAME_FILE_OUTPUT_REPORT_MD = config['NAME-FILE'] +"_Report_" + label_date + ".md"
-NAME_FILE_OUTPUT_REPORT_HTML = config['NAME-FILE'] +"_Report_" + label_date + ".html"
-
-NAME_FILE_OUTPUT_BIB = config['NAME-FILE'] + "_" + label_date + ".bib"
-
-
 #Stopwords for capitalization
 #nltk.download('stopwords')
 LIST_STOPWORDS_ENGLISH = stopwords.words('english')
 LIST_STOPWORDS_ENGLISH.append('st')
 LIST_STOPWORDS_ENGLISH.append('nd')
 LIST_STOPWORDS_ENGLISH.append('rd')
-
 LIST_STOPWORDS_PORTUGUESE = stopwords.words('portuguese')
 
 #Create directories
 path_current = os.getcwd() # Current directory
-
-path_bib_original = path_current+"\\OriginalBIB\\"
-Path(path_bib_original).mkdir(parents=True, exist_ok=True)
-
-path_reports = path_current+"\\GenerateReports\\"
-Path(path_reports).mkdir(parents=True, exist_ok=True)
-
-path_bib = path_current+"/GenerateBIB/"
-Path(path_bib).mkdir(parents=True, exist_ok=True)
+path_bib_original = os.path.join(path_current, "OriginalBIB")
+path_reports = os.path.join(path_current, "GenerateReports")
+path_bib = os.path.join(path_current, "GenerateBIB")
 
 ## Load configuration
 def main():
 
-    file = open("results.txt","w+")
+    LANGUAGES = {
+    "english": "english",
+    "portuguese": "portuguese",
+    }
+
+    TYPES = {
+        "num-alpha" : "num-alpha",
+        "num": "num-alpha",
+        "numeric": "num-alpha",
+        "alpha": "num-alpha",
+        "apa": "apa",
+        "apalike" : "apa",
+    }
+
+    #arguments entered via the command line
+    argparser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    argparser.add_argument(dest="filename")
+    argparser.add_argument(
+        "-L",
+        "--language",
+        choices=LANGUAGES.keys(),
+        help="Select a language { 'english' or 'portuguese' }",
+        default="english",
+    )
+    argparser.add_argument(
+        "-T",
+        "--type",
+        choices=TYPES.keys(),
+        help="Select a type { 'num', 'alpha' or 'apa' }",
+        default="num",
+    )
+    args = argparser.parse_args()
+
+    #for test
+    #LANGUAGE = 'english'
+    #TYPE_REFERENCES = 'apa'
+    #FILE_NAME = 'referencesTest.bib'
+
+    LANGUAGE = args.language
+    print('LANGUAGE: ', LANGUAGE)
+
+    TYPE_REFERENCES = args.type
+    print('TYPE_REFERENCES: ', TYPE_REFERENCES)
+
+    FILE_NAME = args.filename
+    print('FILE_NAME: ', FILE_NAME)
+
+    NAME_FILE_OUTPUT_REPORT_MD = FILE_NAME[:-4] +"_Report_" + label_date + ".md"
+    NAME_FILE_OUTPUT_REPORT_HTML = FILE_NAME[:-4] +"_Report_" + label_date + ".html"
+    NAME_FILE_OUTPUT_BIB = FILE_NAME[:-4] + "_" + label_date + ".bib"
+
+    file = open("results_temp.txt","w+")
 
     lineHeader1 = "# References Report: " + str(label_date) + '\r'
-    lineHeader2 = "## - Configurations: _Bib File:_ **"+ NAME_FILE +"** / _Language:_ **"+ LANGUAGE +"** / _Type References:_ **"+ TYPE_REFERENCES +"**\r\n"
+    lineHeader2 = "## - Configurations: _Bib File:_ **"+ FILE_NAME +"** / _Language:_ **"+ LANGUAGE +"** / _Type References:_ **"+ TYPE_REFERENCES +"**\r\n"
     file.write(lineHeader1)
     file.write(lineHeader2)
 
@@ -75,14 +110,19 @@ def main():
             assert LANGUAGE in ['english', 'portuguese']
             pass_language == True
             assert TYPE_REFERENCES in ['apa', 'num-alpha']
-            if os.path.exists("refer_find_errors_generate.bib") == False:
-                shutil.copyfile(path_bib_original+config['NAME-FILE']+'.bib', 'refer_find_errors_generate.bib')
 
-            bib_data = parse_file('refer_find_errors_generate.bib')
+            if os.path.exists("refer_find_errors_generate_temp.bib") == False:
+                with os.scandir(path_bib_original) as entries:
+                    for entry in entries:
+                        if entry.name == FILE_NAME:
+                            shutil.copyfile(os.path.join(path_bib_original, FILE_NAME), 'refer_find_errors_generate_temp.bib')
+                            break
+
+            bib_data = parse_file('refer_find_errors_generate_temp.bib')
             stop = False
         except FileNotFoundError as identifier:
             read_error = True
-            msg_erros += '- ## The file name defined in the [NAME-FILE] parameter of the `config.json` file was not found in the bib files folder. '
+            msg_erros += '- ## The file name defined in the [FILE-NAME] parameter of the `config.json` file was not found in the bib files folder. '
             msg_erros += 'Check if it is actually in the folder (OriginalBIB) or if the file name was spelled correctly in the parameter. '
             msg_erros += 'Remember to NOT specify the extension (.bib) in the config.json file : ' + str(identifier) + '\r'
             stop = False
@@ -106,11 +146,11 @@ def main():
             tag_rep = str(identifier).split(':')
 
             #input file
-            fin = open("refer_find_errors_generate.bib", "rt")
+            fin = open("refer_find_errors_generate_temp.bib", "rt")
             contents = fin.read().replace(str(tag_rep[1]).strip(), str(tag_rep[1]).strip()+str(count), count)
             fin.close()
 
-            fin = open("refer_find_errors_generate.bib", "w+")
+            fin = open("refer_find_errors_generate_temp.bib", "w+")
             fin.write(contents)
             fin.close()
 
@@ -120,11 +160,11 @@ def main():
             msg_erros += '- ## ' + str(identifier) + '\r'
 
             #input file
-            fin = open("refer_find_errors_generate.bib", "rt")
+            fin = open("refer_find_errors_generate_temp.bib", "rt")
             contents = fin.read().replace(erro, 'JAN')
             fin.close()
 
-            fin = open("refer_find_errors_generate.bib", "w+")
+            fin = open("refer_find_errors_generate_temp.bib", "w+")
             fin.write(contents)
             fin.close()
 
@@ -136,17 +176,17 @@ def main():
             msg_erros += '## - ' + str(identifier) + '\r'
 
             #input file
-            fin = open("refer_find_errors_generate.bib", "rt")
+            fin = open("refer_find_errors_generate_temp.bib", "rt")
             contents = fin.read().replace(erro, value_new)
             fin.close()
 
-            fin = open("refer_find_errors_generate.bib", "w+")
+            fin = open("refer_find_errors_generate_temp.bib", "w+")
             fin.write(contents)
             fin.close()
             stop = False
 
-    if os.path.exists("refer_find_errors_generate.bib"):
-        os.remove("refer_find_errors_generate.bib")
+    if os.path.exists("refer_find_errors_generate_temp.bib"):
+        os.remove("refer_find_errors_generate_temp.bib")
 
 
     # ===========================================================
@@ -224,7 +264,7 @@ def main():
                 'incollection': {'title', 'author', 'year', 'booktitle', 'publisher', 'volume', 'pages', 'edition'}
             }
 
-        bib_data = parse_file(path_bib_original+NAME_FILE)
+        bib_data = parse_file(os.path.join(path_bib_original, FILE_NAME))
         ##
 
         line1 = '| Error | Type |Tag | Title | Warning |' + '\r'
@@ -237,10 +277,12 @@ def main():
         for entry in bib_data.entries:
             bib = bib_data.entries[entry]
             #print('entry: ============ ', entry)
-            msg = check(bib, REQ, MONTHS, TYPE_REFERENCES)
-            tag_inv, bib = regenerate_bib(bib, REQ)
+            msg, tag_inv = check(bib, REQ, MONTHS, TYPE_REFERENCES)
 
             if tag_inv == False:
+                msg_gen, bib = regenerate_bib(bib, REQ)
+                msg+=msg_gen
+
                 bib_data.entries[entry] = bib
             else:
                 tag_inv_global = True
@@ -251,12 +293,12 @@ def main():
                 file.write(line)
 
         if tag_inv_global == False:
-            file_bib = open(path_bib+NAME_FILE_OUTPUT_BIB,"w+", encoding="utf-8")
+            file_bib = open(os.path.join(path_bib, NAME_FILE_OUTPUT_BIB),"w+", encoding="utf-8")
             file_bib.write(bib_data.to_string('bibtex'))
             file_bib.close()
 
             if LANGUAGE == 'portuguese':
-                fin = open(path_bib+NAME_FILE_OUTPUT_BIB, "rt+")
+                fin = open(os.path.join(path_bib, NAME_FILE_OUTPUT_BIB), "rt+")
                 contents = ''
                 for index, month in enumerate(MONTHS_ENG_VALID):
                     month_pt = MONTHS_PORT_VALID[index].upper()
@@ -264,7 +306,7 @@ def main():
 
                 fin.close()
 
-                fin = open(path_bib+NAME_FILE_OUTPUT_BIB, "w+")
+                fin = open(os.path.join(path_bib, NAME_FILE_OUTPUT_BIB), "w+")
                 fin.write(contents)
                 fin.close()
 
@@ -298,25 +340,31 @@ def main():
 
     file.close()
 
-    shutil.copyfile("results.txt", NAME_FILE_OUTPUT_REPORT_MD)
+    shutil.copyfile("results_temp.txt", NAME_FILE_OUTPUT_REPORT_MD)
 
     command = "grip "+NAME_FILE_OUTPUT_REPORT_MD+" --export "+NAME_FILE_OUTPUT_REPORT_HTML
     os.system(command)
 
     del_html = False
-    file_html = open(NAME_FILE_OUTPUT_REPORT_HTML, "rt")
-    contents = file_html.read()
-    if '500 Internal Server Error' in contents:
+    if os.path.exists(NAME_FILE_OUTPUT_REPORT_HTML):
+        file_html = open(NAME_FILE_OUTPUT_REPORT_HTML, "rt")
+        contents = file_html.read()
+
+        if '500 Internal Server Error' in contents:
+            del_html = True
+        file_html.flush()
+        file_html.close()
+
+    else:
         del_html = True
-    file_html.close()
 
     if del_html == True:
-        shutil.copyfile(NAME_FILE_OUTPUT_REPORT_MD, path_reports+NAME_FILE_OUTPUT_REPORT_MD)
+        shutil.copyfile(NAME_FILE_OUTPUT_REPORT_MD, os.path.join(path_reports, NAME_FILE_OUTPUT_REPORT_MD))
     else:
-        shutil.copyfile(NAME_FILE_OUTPUT_REPORT_HTML, path_reports+NAME_FILE_OUTPUT_REPORT_HTML)
+        shutil.copyfile(NAME_FILE_OUTPUT_REPORT_HTML, os.path.join(path_reports, NAME_FILE_OUTPUT_REPORT_HTML))
 
-    if os.path.exists("results.txt"):
-        os.remove("results.txt")
+    if os.path.exists("results_temp.txt"):
+        os.remove("results_temp.txt")
     if os.path.exists(NAME_FILE_OUTPUT_REPORT_MD):
         os.remove(NAME_FILE_OUTPUT_REPORT_MD)
     if os.path.exists(NAME_FILE_OUTPUT_REPORT_HTML):
@@ -324,126 +372,136 @@ def main():
 
 
 def regenerate_bib(bib, REQ):
-    tag_inv = False
-    if bib.type not in REQ.keys():
-        tag_inv = True
-    else:
-        list_fields_keys = [field_key.lower() for field_key in bib.fields.keys()]
-        list_fields_persons = [field_person.lower() for field_person in bib.persons.keys()]
-        fields = set(list_fields_keys + list_fields_persons)
+    list_fields_keys = [field_key.lower() for field_key in bib.fields.keys()]
+    list_fields_persons = [field_person.lower() for field_person in bib.persons.keys()]
+    fields = set(list_fields_keys + list_fields_persons)
+    missing = REQ[bib.type].difference(fields)
 
-        missing = REQ[bib.type].difference(fields)
+    msg = ''
 
+    if bib.type == 'book' or bib.type == 'inbook':
+        exist = 'publisher' in missing
+        if exist == False:
+            phrase = bib.fields['publisher']
+            msg_year, phrase = find_year(phrase, 'publisher')
+            msg += msg_year
+
+            publisher_capitalize, phrase_cap = check_parentheses_and_capitalize(phrase)
+
+            #capitalize
+            if len(phrase_cap) > 0:
+                bib.fields['publisher'] = phrase_cap
+
+            if publisher_capitalize == True:
+                msg += 'Field { publisher } is not capitalized; '
+
+    if bib.type == 'article':
+        exist = 'journal' in missing
+        if exist == False:
+            phrase = bib.fields['journal']
+            msg_year, phrase = find_year(phrase, 'journal')
+            msg += msg_year
+
+            journal_capitalize, phrase_cap = check_parentheses_and_capitalize(phrase)
+
+            #capitalize
+            if len(phrase_cap) > 0:
+                bib.fields['journal'] = phrase_cap
+
+            if journal_capitalize == True:
+                msg += 'Field { journal } is not capitalized; '
+
+    if bib.type == 'inproceedings' or bib.type == 'proceedings' or bib.type == 'incollection' or bib.type == 'conference':
+        exist = 'booktitle' in missing
+        if exist == False:
+            phrase = bib.fields['booktitle']
+            msg_year, phrase = find_year(phrase, 'booktitle')
+            msg += msg_year
+
+            booktitle_capitalize, phrase_cap = check_parentheses_and_capitalize(phrase)
+
+            #capitalize
+            if len(phrase_cap) > 0:
+                bib.fields['booktitle'] = phrase_cap
+
+            if booktitle_capitalize == True:
+                msg += 'Field { booktitle } is not capitalized; '
+
+    if bib.type == 'mastherthesis' or bib.type == 'phdthesis':
+        exist = 'school' in missing
+        if exist == False:
+            phrase = bib.fields['school']
+            msg_year, phrase = find_year(phrase, 'school')
+            msg += msg_year
+
+            school_capitalize, phrase_cap = check_parentheses_and_capitalize(phrase)
+
+            #capitalize
+            if len(phrase_cap) > 0:
+                bib.fields['school'] = phrase_cap
+
+            if school_capitalize == True:
+                msg += 'Field { school } is not capitalized; '
+
+    if bib.type == 'techreport':
+        exist = 'institution' in missing
+        if exist == False:
+            phrase = bib.fields['institution']
+            msg_year, phrase = find_year(phrase, 'institution')
+            msg += msg_year
+
+            institution_capitalize, phrase_cap = check_parentheses_and_capitalize(phrase)
+
+            #capitalize
+            if len(phrase_cap) > 0:
+                bib.fields['institution'] = phrase_cap
+
+            if institution_capitalize == True:
+                msg += 'Field { institution } is not capitalized; '
+
+    if bib.type in REQ.keys():
         for value in missing:
             bib.fields[value] = 'MISSING'
 
-    return tag_inv, bib
+    return msg, bib
 
 ##
 def check(bib, req, months, type_references):
     list_fields_keys = [field_key.lower() for field_key in bib.fields.keys()]
     list_fields_persons = [field_person.lower() for field_person in bib.persons.keys()]
     fields = set(list_fields_keys + list_fields_persons)
-    msg = ''
 
+    msg = ''
+    tag_inv = False
     if bib.type not in req.keys():
-        msg = 'Type not implemented: ' + bib.type
-        #req = {bib.type}
+        msg = 'Type not implemented: @' + bib.type + 'remove or replace; '
+        tag_inv = True
     else:
         if type_references == 'apa':
             if bib.type == 'article' and 'year' in fields:
                 year_month_check = check_article_year_month(bib.fields['year'], months, type_references)
                 if not year_month_check:
-                    msg += 'Failed Month and Year: year={Mon, Year} check'
+                    msg += 'Failed Month and Year: year={Mon, Year} check; '
         if type_references == 'num-alpha':
             if bib.type == 'article' and 'month' in fields:
                 month_check = check_article_year_month(bib.fields['month'], months, type_references)
                 if not month_check:
-                    msg += 'Failed Month month={ Mon } check'
+                    msg += 'Failed Month month={ Mon } check; '
 
         missing = req[bib.type].difference(fields)
         if len(missing) > 0:
-            if len(msg) > 0:
-                msg += ', Missing: ' + str(missing)
-            else:
-                msg = 'Missing: ' +str(missing)
+            msg += 'Missing: ' + str(missing) + "; "
 
-        if bib.type == 'book' or bib.type == 'inbook':
-            exist = 'publisher' in missing
-            if exist == False:
-                phrase = bib.fields['publisher']
-                msg = find_year(phrase, msg)
-                publisher_capitalize = check_parentheses_and_capitalize(phrase)
+    return msg, tag_inv
 
-                if publisher_capitalize == True:
-                    if len(msg) > 0:
-                        msg += ', Field { publisher } is not capitalized'
-                    else:
-                        msg = 'Field { publisher } is not capitalized'
-
-        if bib.type == 'article':
-            exist = 'journal' in missing
-            if exist == False:
-                phrase = bib.fields['journal']
-                msg = find_year(phrase, msg)
-                journal_capitalize = check_parentheses_and_capitalize(phrase)
-
-                if journal_capitalize == True:
-                    if len(msg) > 0:
-                        msg += ', Field { journal } is not capitalized'
-                    else:
-                        msg = 'Field { journal } is not capitalized'
-
-        if bib.type == 'inproceedings' or bib.type == 'proceedings' or bib.type == 'incollection' or bib.type == 'conference':
-            exist = 'booktitle' in missing
-            if exist == False:
-                phrase = bib.fields['booktitle']
-                msg = find_year(phrase, msg)
-                booktitle_capitalize = check_parentheses_and_capitalize(phrase)
-
-                if booktitle_capitalize == True:
-                    if len(msg) > 0:
-                        msg += ', Field { booktitle } is not capitalized'
-                    else:
-                        msg = 'Field { booktitle } is not capitalized'
-
-        if bib.type == 'mastherthesis' or bib.type == 'phdthesis':
-            exist = 'school' in missing
-            if exist == False:
-                phrase = bib.fields['school']
-                msg = find_year(phrase, msg)
-                school_capitalize = check_parentheses_and_capitalize(phrase)
-
-                if school_capitalize == True:
-                    if len(msg) > 0:
-                        msg += ', Field { school } is not capitalized'
-                    else:
-                        msg = 'Field { school } is not capitalized'
-
-        if bib.type == 'techreport':
-            exist = 'institution' in missing
-            if exist == False:
-                phrase = bib.fields['institution']
-                msg = find_year(phrase, msg)
-                institution_capitalize = check_parentheses_and_capitalize(phrase)
-
-                if institution_capitalize == True:
-                    if len(msg) > 0:
-                        msg += ', Field { institution } is not capitalized'
-                    else:
-                        msg = 'Field { institution } is not capitalized'
-
-    return msg
-
-def find_year(phrase, msg):
+def find_year(phrase, tag):
+    msg = ''
     result = re.findall(re.compile('.*([1-3][0-9]{3})'), phrase)
     if len(result) > 0:
-        if len(msg) > 0:
-            msg += ', The { journal } field takes no YEAR information:  '+ str(result) +' remove'
-        else:
-            msg = 'The { journal } field takes no YEAR information:  '+ str(result) +' remove'
+        msg = 'The {'+tag+'} field takes no year information:  '+ str(result) +' remove; '
+        phrase = phrase.replace(str(result[0]), '')
 
-    return msg
+    return msg, phrase
 
 def check_parentheses_and_capitalize(phrase):
     language = detect(phrase)
@@ -452,31 +510,52 @@ def check_parentheses_and_capitalize(phrase):
     phrase = re.sub(r"\((.*?)\)", ' ', phrase)
 
     words = phrase.split()
+    words_aux = []
 
     uncapitalized = False
-    if language == 'en':
-        for word in words:
-            if word not in LIST_STOPWORDS_ENGLISH:
-                if "-" in word:
-                    words_hifen = word.split('-')
-                    word = words_hifen[0]
-                if word.isupper() == False:
-                    if word != word.capitalize():
-                        uncapitalized == True
-                        break
 
-    elif language == 'pt':
+    if language == 'pt':
         for word in words:
             if word not in LIST_STOPWORDS_PORTUGUESE:
                 if "-" in word:
                     words_hifen = word.split('-')
                     word = words_hifen[0]
+
                 if word.isupper() == False:
                     if word != word.capitalize():
-                        uncapitalized == True
-                        break
+                        uncapitalized = True
+                        words_aux.append(word.capitalize())
+                    else:
+                        words_aux.append(word)
+                else:
+                    words_aux.append(word)
+            else:
+                words_aux.append(word)
 
-    return uncapitalized
+    else:
+        for word in words:
+            if word not in LIST_STOPWORDS_ENGLISH:
+                if "-" in word:
+                    words_hifen = word.split('-')
+                    word = words_hifen[0]
+
+                if word.isupper() == False:
+                    if word != word.capitalize():
+                        uncapitalized = True
+                        words_aux.append(word.capitalize())
+                    else:
+                        words_aux.append(word)
+                else:
+                    words_aux.append(word)
+            else:
+                words_aux.append(word)
+
+    if uncapitalized == True:
+        phrase_cap = ' '.join([word for word in words_aux])
+    else:
+        phrase_cap = ''
+
+    return uncapitalized, phrase_cap
 
 def check_article_year_month(fields, months, type_references):
     fields = fields.split()

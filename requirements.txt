@@ -1,6 +1,8 @@
+pathlib
+grip
 markdown2
 click
 wkhtmltopdf
-langdetect==1.0.7
-pybtex==0.22.2
-nltk==3.4.5
+nltk
+langdetect
+pybtex
