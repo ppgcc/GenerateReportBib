@@ -26,6 +26,8 @@ LIST_STOPWORDS_ENGLISH.append('st')
 LIST_STOPWORDS_ENGLISH.append('nd')
 LIST_STOPWORDS_ENGLISH.append('rd')
 LIST_STOPWORDS_PORTUGUESE = stopwords.words('portuguese')
+LIST_STOPWORDS_SPANISH = stopwords.words('spanish')
+LIST_STOPWORDS_GERMAN = stopwords.words('german')
 
 #Create directories
 path_current = os.getcwd() # Current directory
@@ -81,7 +83,7 @@ def main():
     print('FILE_NAME: ', FILE_NAME)
     '''
     #production
-
+    #'''
     args = argparser.parse_args()
     LANGUAGE = args.language
     print('LANGUAGE: ', LANGUAGE)
@@ -93,7 +95,7 @@ def main():
 
     FILE_NAME = args.filename
     print('FILE_NAME: ', FILE_NAME)
-
+    #'''
     NAME_FILE_OUTPUT_REPORT_MD = FILE_NAME[:-4] +"_Report_" + label_date + ".md"
     NAME_FILE_OUTPUT_REPORT_HTML = FILE_NAME[:-4] +"_Report_" + label_date + ".html"
     NAME_FILE_OUTPUT_BIB = FILE_NAME[:-4] + "_" + label_date + ".bib"
@@ -536,57 +538,42 @@ def check_parentheses_and_capitalize(phrase):
     uncapitalized = False
     hif = False
     word2 = ''
-
-    if language == 'pt':
-        for word in words:
-            if word not in LIST_STOPWORDS_PORTUGUESE:
-                if "-" in word:
-                    hif = True
-                    words_hifen = word.split('-')
-                    word = words_hifen[0]
-                    word2 = words_hifen[1]
-                if word.isupper() == False:
-                    if word != word.capitalize():
-                        uncapitalized = True
-                        if hif == True:
-                            words_aux.append(word.capitalize()+"-"+word2)
-                        else:
-                            words_aux.append(word.capitalize())
-                    else:
-                        if hif == True:
-                            words_aux.append(word+"-"+word2)
-                        else:
-                            words_aux.append(word)
-                else:
-                    words_aux.append(word)
-            else:
-                words_aux.append(word)
-
+    STOP_LIST = []
+    if language == 'en':
+        STOP_LIST = LIST_STOPWORDS_ENGLISH
+    elif language == 'pt':
+        STOP_LIST = LIST_STOPWORDS_PORTUGUESE
+    elif language == 'es':
+        STOP_LIST = LIST_STOPWORDS_SPANISH
+    elif language == 'de':
+        STOP_LIST = LIST_STOPWORDS_GERMAN
     else:
-        for word in words:
-            hif = False
-            if word not in LIST_STOPWORDS_ENGLISH:
-                if "-" in word:
-                    hif = True
-                    words_hifen = word.split('-')
-                    word = words_hifen[0]
-                    word2 = words_hifen[1]
-                if word.isupper() == False:
-                    if word != word.capitalize():
-                        uncapitalized = True
-                        if hif == True:
-                            words_aux.append(word.capitalize()+"-"+word2)
-                        else:
-                            words_aux.append(word.capitalize())
+        STOP_LIST = LIST_STOPWORDS_ENGLISH
+
+    for word in words:
+        if word not in STOP_LIST:
+            if "-" in word:
+                hif = True
+                words_hifen = word.split('-')
+                word = words_hifen[0]
+                word2 = words_hifen[1]
+            if word.isupper() == False:
+                if word != word.capitalize():
+                    uncapitalized = True
+                    if hif == True:
+                        words_aux.append(word.capitalize()+"-"+word2)
                     else:
-                        if hif == True:
-                            words_aux.append(word+"-"+word2)
-                        else:
-                            words_aux.append(word)
+                        words_aux.append(word.capitalize())
                 else:
-                    words_aux.append(word)
+                    if hif == True:
+                        words_aux.append(word+"-"+word2)
+                    else:
+                        words_aux.append(word)
             else:
-                words_aux.append(word)
+                words_aux.append("{"+word+"}")
+        else:
+            words_aux.append(word)
+
 
     if uncapitalized == True:
         phrase_cap = ' '.join([word for word in words_aux])
