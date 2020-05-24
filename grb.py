@@ -28,9 +28,10 @@ LIST_STOPWORDS_ENGLISH.append('rd')
 LIST_STOPWORDS_PORTUGUESE = stopwords.words('portuguese')
 LIST_STOPWORDS_SPANISH = stopwords.words('spanish')
 LIST_STOPWORDS_GERMAN = stopwords.words('german')
+LIST_STOPWORDS_GERMAN.append('and')
 
 # Exception List
-EXCEPTION_LIST = ['arXiv']
+EXCEPTION_LIST = ['arXiv', '-', '\&', '&']
 
 #Create directories
 path_current = os.getcwd() # Current directory
@@ -78,11 +79,11 @@ def main():
     print('LANGUAGE: ', LANGUAGE)
     LANGUAGE = LANGUAGES[LANGUAGE]
 
-    TYPE_REFERENCES = 'num'
+    TYPE_REFERENCES = 'apa'
     print('TYPE_REFERENCES: ', TYPE_REFERENCES)
     TYPE_REFERENCES = TYPES[TYPE_REFERENCES]
 
-    FILE_NAME = 'referencesTest2.bib'
+    FILE_NAME = 'juliathesis.bib'
     print('FILE_NAME: ', FILE_NAME)
     '''
     #production
@@ -296,6 +297,7 @@ def main():
         file.write(line1)
         file.write(line2)
 
+        congratulations = False
         count=0
         tag_inv_global = False
         for entry in bib_data.entries:
@@ -316,25 +318,6 @@ def main():
                 line = '| ' + str(count) +' |@'+ bib.type + '| {' + str(entry) + '} |' + str(bib.fields['title']) + ' | ' + msg + ' | ' + '\r'
                 file.write(line)
 
-        if tag_inv_global == False:
-
-            file_bib = open(os.path.join(path_bib, NAME_FILE_OUTPUT_BIB),"w+", encoding="utf-8")
-
-            file_bib.write(bib_data.to_string('bibtex'))
-            file_bib.close()
-
-            if LANGUAGE == 'portuguese':
-                fin = open(os.path.join(path_bib, NAME_FILE_OUTPUT_BIB), "rt+",encoding="utf-8")
-                contents = ''
-                for index, month in enumerate(MONTHS_ENG_VALID):
-                    month_pt = MONTHS_PORT_VALID[index].upper()
-                    contents += fin.read().replace(month, month_pt)
-
-                fin.close()
-
-                fin = open(os.path.join(path_bib, NAME_FILE_OUTPUT_BIB), "w+",encoding="utf-8")
-                fin.write(contents)
-                fin.close()
 
         if count != 0:
             lineFooter1 = "# _Total references:_ **" + str(len(bib_data.entries)) + "** / _References with errors:_ **" + str(count) +"**\r\n"
@@ -359,10 +342,31 @@ def main():
                 file.write(line10)
 
         else:
+            congratulations = True
             lineCongrat1 = '# Congratulations! \r\n'
             lineCongrat2 = '## - No errors were identified in the fields. However, it is still necessary to check the standardization of your references, which this script does not guarantee.'
             file.write(lineCongrat1)
             file.write(lineCongrat2)
+
+        if tag_inv_global == False and congratulations == False:
+
+            file_bib = open(os.path.join(path_bib, NAME_FILE_OUTPUT_BIB),"w+", encoding="utf-8")
+
+            file_bib.write(bib_data.to_string('bibtex'))
+            file_bib.close()
+
+            if LANGUAGE == 'portuguese':
+                fin = open(os.path.join(path_bib, NAME_FILE_OUTPUT_BIB), "rt+",encoding="utf-8")
+                contents = ''
+                for index, month in enumerate(MONTHS_ENG_VALID):
+                    month_pt = MONTHS_PORT_VALID[index].upper()
+                    contents += fin.read().replace(month, month_pt)
+
+                fin.close()
+
+                fin = open(os.path.join(path_bib, NAME_FILE_OUTPUT_BIB), "w+",encoding="utf-8")
+                fin.write(contents)
+                fin.close()
 
     file.close()
 
@@ -555,7 +559,7 @@ def check_parentheses_and_capitalize(phrase):
 
     for word in words:
         if word not in STOP_LIST:
-            if "-" in word:
+            if "-" in word and word != '-':
                 hif = True
                 words_hifen = word.split('-')
                 word = words_hifen[0]
