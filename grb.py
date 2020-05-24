@@ -29,6 +29,9 @@ LIST_STOPWORDS_PORTUGUESE = stopwords.words('portuguese')
 LIST_STOPWORDS_SPANISH = stopwords.words('spanish')
 LIST_STOPWORDS_GERMAN = stopwords.words('german')
 
+# Exception List
+EXCEPTION_LIST = ['arXiv']
+
 #Create directories
 path_current = os.getcwd() # Current directory
 path_bib_original = os.path.join(path_current, "OriginalBIB")
@@ -79,7 +82,7 @@ def main():
     print('TYPE_REFERENCES: ', TYPE_REFERENCES)
     TYPE_REFERENCES = TYPES[TYPE_REFERENCES]
 
-    FILE_NAME = 'PT-literature_t.bib'
+    FILE_NAME = 'referencesTest2.bib'
     print('FILE_NAME: ', FILE_NAME)
     '''
     #production
@@ -557,20 +560,26 @@ def check_parentheses_and_capitalize(phrase):
                 words_hifen = word.split('-')
                 word = words_hifen[0]
                 word2 = words_hifen[1]
-            if word.isupper() == False:
-                if word != word.capitalize():
-                    uncapitalized = True
-                    if hif == True:
-                        words_aux.append(word.capitalize()+"-"+word2)
-                    else:
-                        words_aux.append(word.capitalize())
-                else:
-                    if hif == True:
-                        words_aux.append(word+"-"+word2)
-                    else:
-                        words_aux.append(word)
+            if word == 'e': # e-Business, e-Science, ...
+                 words_aux.append(word+"-"+word2)
+            elif word in EXCEPTION_LIST:
+                words_aux.append(word)
             else:
-                words_aux.append("{"+word+"}")
+                if word.isupper() == False:
+                    if word[0].isupper() == False:
+                    #if word != word.capitalize():
+                        uncapitalized = True
+                        if hif == True:
+                            words_aux.append(word.capitalize()+"-"+word2)
+                        else:
+                            words_aux.append(word.capitalize())
+                    else:
+                        if hif == True:
+                            words_aux.append(word+"-"+word2)
+                        else:
+                            words_aux.append(word)
+                else:
+                    words_aux.append("{"+word+"}")
         else:
             words_aux.append(word)
 
