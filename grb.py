@@ -504,7 +504,7 @@ def check(bib, req, months, type_references):
     msg = ''
     tag_inv = False
     if bib.type not in req.keys():
-        msg = 'Type not implemented: @' + bib.type + 'remove or replace; '
+        msg = 'Type not implemented: [@' + bib.type + '] remove or replace; '
         tag_inv = True
     else:
         if type_references == 'apa':
