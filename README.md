@@ -1,4 +1,4 @@
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/olimarborges/GenerateReportBib/blob/master/GoogleColab_GRB.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ppgcc/GenerateReportBib/blob/master/GoogleColab_GRB.ipynb)
 
 # Generate Report Bib (GRB)
 
