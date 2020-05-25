@@ -8,20 +8,12 @@ No entanto, após o uso deste script, não significará uma garantia de que seu 
 
 No momento, as verificações programadas neste projeto seguem a padronização definida no documento [Formatos de Monografias, Dissertações e Teses do PPGCC](http://www.pucrs.br/politecnica-prov/wp-content/uploads/sites/166/2018/10/padrao_teses_dissertacoes_monografias_PPGCC_18102018.pdf), como também o [Documento Auxiliar](https://github.com/ppgcc/DocumentosPPGCC) criado pelo mesmo representante discente. Ele não está configurado para verificar as adequações em relação às bibliografias utilizadas em templates da ACM, IEEE, Springer e etc.
 
-Resumidamente, as principais funcionalidades desse script são:
+**ATENÇÃO:** Antes de fazer o download deste projeto, leia a seção [Utilização](#utilização).
 
-- Gerar relatórios informativos sobre a adequação do seu `arquivo.bib` em relação às regras de padronização definidas no documento de Formatos de Monografias, Dissertações e Teses do PPGCC.
-- Geração de um `novo_arquivo.bib` (baseado no seu `arquivo.bib` de referências orginal) com as seguintes correções:
-  - serão inseridos os campos faltantes junto à palavra 'MISSING'. Por exemplo, se o script identificar que para a sua referência 'X', do tipo '@article', a informação do 'mês' for obrigatória e no seu `arquivo.bib` original a tag 'month' não constar, o script irá regerar essa referênicia 'X', adicionando a tag `month='MISSING'`. Desta forma, basta abrir o `novo_arquivo.bib` gerado, procurar pelas palavras 'MISSING' e no lugar, inserir a informação correta referente àquela citação.
-  - retira a informação de ano, caso ela conste nos nomes das conferências, jornals, editoras de livros e etc. Existe um campo específico para a informação de ano `year={}`, portanto ela não tem que se repetir junto aos nomes dos eventos. As tags que passam por esta verificação são: `{publisher, journal, booktitle, school e institution}`.
-  - para as palavras acrônimas ('IEEE', 'ACM', ..., por exemplo), que constam nos nomes das conferências, jornals, editoras de livros e etc., são inseridas chaves `{ }` na determinada palavra, quando ela já não possuir. Isso serve para que quando o LaTeX for compilar, ele não retire o 'formato uppercase' da palavra. Caso contrário, mesmo que no seu `arquivo.bib` a palavra estiver correta (`ACM`, por exemplo), quando o LaTeX compilar, ele vai gerar `Acm`. Por isso a necessidades do uso das chaves `{ }`, nestas palavras. As tags que passam por esta verificação são: `{publisher, journal, booktitle, school e institution}`.
-  - realiza a capitalização dos campos referentes aos nomes das conferências, jornals, editoras de livros e etc. As tags que passam por esta verificação são: `{publisher, journal, booktitle, school e institution}`. No entanto, há uma restrição de funcionamento correto somente aos nomes escritos nos idiomas `português`, `inglês`, `espanhol` e `alemão`. Pois o script precisa realizar o uso e download de `STOPWORDS` do determinado idioma. Estes idiomas foram configurados, por terem sido os mais identificados nos testes realizados com os `arquivos.bib` enviados para testes por demais colegas do PPGCC.
-
-Ressaltanto que estas verificações podem se comportar de maneira inesperada, caso as informações que constem nas tags não estejam adequadas. Por exemplo, se o nome da conferência `Proceedings of the ACM/IEEE International Conference on Software Engineering`, estiver escrita de forma incorreta, com palavras unidas, por exemplo: `Proceedings of the ACM/IEEEInternational Conference on SoftwareEngineering`, a verificação vai considerar como se fosse apenas uma palavra, resultando em `Proceedings of the Acm/ieeeinternational Conference on Softwareengineering`. Além disso, caso alguma palavra 'stopword' esteja com a identificação de acentuação (por exemplo: `n{\~a}o`), ela não será caracterizada como tal (stopword) e portanto sofrerá capitalização (`N{\~a}o`). Por este e outros motivos, sempre consulte o relatório gerado e verifique as mensagens. Pois nestes exemplos, haverão informações de que estas conferências não estavam com seu nome capitalizado. E portanto, acesse o `novo_arquivo.bib` e verifique se o script realizou a capitalização de forma adequada. Isso vale para todas as correções listadas acima, que o script realiza de forma automatizada.
-
-## Tabela de conteúdos
+## Tabela de Conteúdos
 
 - [Utilização](#utilização)
+- [Resumo das Funcionalidades](#resumo-das-funcionalidades)
 - [Configuração do Ambiente Python](#configuração-do-ambiente-python)
   - [Ambiente Virtual Python](#ambiente-virtual-python)
     - [Configurando o Ambiente](#configurando-o-ambiente)
@@ -41,7 +33,28 @@ Ressaltanto que estas verificações podem se comportar de maneira inesperada, c
 
 ## Utilização
 
-Faça o download deste repositório (ou clone) em seu ambiente (computador). Lembre-se da pasta (local) aonde este projeto ficará.
+Você pode optar por fazer o uso deste projeto de duas formas:
+1. Fazer o download deste repositório (ou clone) em seu ambiente (computador). Desta forma, você precisará realizar toda a configuração e instalação de pacotes listadas nas próximas duas seções:
+    - [Configuração do Ambiente Python](#configuração-do-ambiente-python)
+    - [Dependências do Projeto](#dependências-do-projeto)
+2. Ou você pode utilizar a versão criada no Google Colab. Desta forma, a execução ficará dentro do ambiente do Colab e você NÃO precisará fazer download ou clone deste projeto para a sua máquina. Para esta versão, clique no botão `Open in Colab`, localizado no topo deste README.md. A partir desta escolha, para entender o funcionamento deste projeto, você pode ir direto para as seções:
+    - [Entendendo o GRB](#entendendo-o-GRB)
+    - [Utilizando o GRB](#utilizando-o-GRB)
+
+## Resumo das Funcionalidades
+
+Resumidamente, as principais funcionalidades desse script são:
+
+- Gerar relatórios informativos sobre a adequação do seu `arquivo.bib` em relação às regras de padronização definidas no documento de Formatos de Monografias, Dissertações e Teses do PPGCC.
+- Geração de um `novo_arquivo.bib` (baseado no seu `arquivo.bib` de referências orginal) com as seguintes correções:
+  - serão inseridos os campos faltantes junto à palavra 'MISSING'. Por exemplo, se o script identificar que para a sua referência 'X', do tipo '@article', a informação do 'mês' for obrigatória e no seu `arquivo.bib` original a tag 'month' não constar, o script irá regerar essa referênicia 'X', adicionando a tag `month='MISSING'`. Desta forma, basta abrir o `novo_arquivo.bib` gerado, procurar pelas palavras 'MISSING' e no lugar, inserir a informação correta referente àquela citação.
+  - retira a informação de ano, caso ela conste nos nomes das conferências, jornals, editoras de livros e etc. Existe um campo específico para a informação de ano `year={}`, portanto ela não tem que se repetir junto aos nomes dos eventos. As tags que passam por esta verificação são: `{publisher, journal, booktitle, school e institution}`.
+  - para as palavras acrônimas ('IEEE', 'ACM', ..., por exemplo), que constam nos nomes das conferências, jornals, editoras de livros e etc., são inseridas chaves `{ }` na determinada palavra, quando ela já não possuir. Isso serve para que quando o LaTeX for compilar, ele não retire o 'formato uppercase' da palavra. Caso contrário, mesmo que no seu `arquivo.bib` a palavra estiver correta (`ACM`, por exemplo), quando o LaTeX compilar, ele vai gerar `Acm`. Por isso a necessidades do uso das chaves `{ }`, nestas palavras. As tags que passam por esta verificação são: `{publisher, journal, booktitle, school e institution}`.
+  - realiza a capitalização dos campos referentes aos nomes das conferências, jornals, editoras de livros e etc. As tags que passam por esta verificação são: `{publisher, journal, booktitle, school e institution}`. No entanto, há uma restrição de funcionamento correto somente aos nomes escritos nos idiomas `português`, `inglês`, `espanhol` e `alemão`. Pois o script precisa realizar o uso e download de `STOPWORDS` do determinado idioma. Estes idiomas foram configurados, por terem sido os mais identificados nos testes realizados com os `arquivos.bib` enviados para testes por demais colegas do PPGCC.
+
+Ressaltanto que estas verificações podem se comportar de maneira inesperada, caso as informações que constem nas tags não estejam adequadas. Por exemplo, se o nome da conferência `Proceedings of the ACM/IEEE International Conference on Software Engineering`, estiver escrita de forma incorreta, com palavras unidas, por exemplo: `Proceedings of the ACM/IEEEInternational Conference on SoftwareEngineering`, a verificação vai considerar como se fosse apenas uma palavra, resultando em `Proceedings of the Acm/ieeeinternational Conference on Softwareengineering`.
+
+Além disso, caso alguma palavra 'stopword' esteja com a identificação de acentuação (por exemplo: `n{\~a}o`), ela não será caracterizada como tal (stopword) e portanto sofrerá capitalização (`N{\~a}o`). Por este e outros motivos, sempre consulte o relatório gerado e verifique as mensagens. Pois nestes exemplos, haverão informações de que estas conferências não estavam com seu nome capitalizado. E portanto, acesse o `novo_arquivo.bib` e verifique se o script realizou a capitalização de forma adequada. Isso vale para todas as correções listadas acima, que o script realiza de forma automatizada.
 
 ## Configuração do Ambiente Python
 
