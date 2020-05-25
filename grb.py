@@ -79,11 +79,11 @@ def main():
     print('LANGUAGE: ', LANGUAGE)
     LANGUAGE = LANGUAGES[LANGUAGE]
 
-    TYPE_REFERENCES = 'apa'
+    TYPE_REFERENCES = 'num'
     print('TYPE_REFERENCES: ', TYPE_REFERENCES)
     TYPE_REFERENCES = TYPES[TYPE_REFERENCES]
 
-    FILE_NAME = 'juliathesis.bib'
+    FILE_NAME = 'referencesTest.bib'
     print('FILE_NAME: ', FILE_NAME)
     '''
     #production
@@ -567,6 +567,8 @@ def check_parentheses_and_capitalize(phrase):
             if word == 'e': # e-Business, e-Science, ...
                  words_aux.append(word+"-"+word2)
             elif word in EXCEPTION_LIST:
+                words_aux.append(word)
+            elif word[0].isdigit() == True:
                 words_aux.append(word)
             else:
                 if word.isupper() == False:
