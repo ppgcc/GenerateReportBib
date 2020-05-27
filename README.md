@@ -300,11 +300,11 @@ Por exemplo, caso no `arquivo.bib` original conste a seguinte referência, com a
 
 ```
 @book{LabelDaCitacao,
-	title={Computers as components: principles of embedded computing system design},
-	author={W. Wolf},
-	year={2001},
+  title={Computers as components: principles of embedded computing system design},
+  author={W. Wolf},
+  year={2001},
   publisher={Morgan kaufmann publishers},
-	address={New York, EUA}
+  address={New York, EUA}
 }
 ```
 
@@ -312,10 +312,10 @@ No arquivo de relatório será apresentada para esta referênicia a mensagem: `M
 
 ```
 @book{LabelDaCitacao,
-	title={Computers as components: principles of embedded computing system design},
-	author={W. Wolf},
-	year={2001},
-	address={New York, EUA},
+  title={Computers as components: principles of embedded computing system design},
+  author={W. Wolf},
+  year={2001},
+  address={New York, EUA},
   publisher={Morgan Kaufmann Publishers},
   numpages={MISSING}
 }
