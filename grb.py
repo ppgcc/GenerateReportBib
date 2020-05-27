@@ -31,7 +31,7 @@ LIST_STOPWORDS_GERMAN = stopwords.words('german')
 LIST_STOPWORDS_GERMAN.append('and')
 
 # Exception List
-EXCEPTION_LIST = ['arXiv', '-', '\&', '&']
+EXCEPTION_LIST = ['arXiv', '-', '\&', '\\&', '&']
 
 #Create directories
 path_current = os.getcwd() # Current directory

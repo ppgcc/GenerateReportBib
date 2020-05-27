@@ -40,6 +40,8 @@ Você pode optar por fazer o uso deste projeto de duas formas:
 2. Ou você pode utilizar a versão criada no Google Colab. Desta forma, a execução ficará dentro do ambiente do Colab e você NÃO precisará fazer download ou clone deste projeto para a sua máquina. Para esta versão, clique no botão `Open in Colab`, localizado no topo deste README.md. A partir desta escolha, para entender o funcionamento deste projeto, você pode ir direto para as seções:
     - [Entendendo o GRB](#entendendo-o-GRB)
     - [Utilizando o GRB](#utilizando-o-GRB)
+  - Caso opte pelo uso no Colab, lembre-se de salvar o arquivo `GoogleColab_GRB.ipynb` para você em seu Drive ou de forma local. Pois senão tudo o que você fizer neste arquivo, após o fechamento da aba, será perdido. Ou seja, tanto os relatórios gerados quanto os arquivos .bib com as correções.
+
 
 ## Resumo das Funcionalidades
 
@@ -183,6 +185,8 @@ O script gera mais de um tipo de relatório, portanto, para verificar quais fora
 
 Por padrão, este arquivo é gerado com extensão `.html` dentro da pasta `GenerateReports`. No entanto, se no momento da conversão para `.html`, o `arquivo.bib` original estiver em uma codificação diferente de `utf-8`, será apresentado um erro no console do Terminal (especificando o/os caracter(es) que não foram identificados pela codificação `utf-8`). Desta forma, o relatório ainda será gerado, só que não mais no formato `.html`, mas sim no formato `.md (markdown)`, na mesma pasta dos relatórios: `GenerateReports`.
   - *Sugestão:* caso seja gerado o arquivo em formato `.md`, você pode utilizar a ferramenta [`Visual Studio Code (VSC)`](https://code.visualstudio.com/) para abri-lo. Depois que abrir o arquivo no VSC, procure por um botão com uma lupa, localizado no canto superior direito, que o arquivo será apresentado no formato visual 'compilado'.
+
+- **DICA:** Depois que este script gerar o seu primeiro `novo_arquivo.bib`, este novo arquivo já possuirá algumas correções, mas no relatório, ele listará todos os erros encontrados, mesmo que ele já tenha corrigido. A partir desse `novo_arquivo.bib` (com as correções realizadas pelo script), passe ele no script como se fosse o seu arquivo .bib original, pois desta forma, grande parte dos itens listados no primeiro relatório como erro, não serão mais listados no próximo relatório. A partir desse momento, você pode iniciar o processo de correção das suas referências.
 
 ### Possíveis Situações de Relatórios de Erros
 
