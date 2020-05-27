@@ -153,9 +153,9 @@ A partir desse momento, será necessário configurar alguns parâmetros que ser�
 
 - **<arquivo.bib>:** Preencha com o nome do seu `arquivo.bib` original que precisa, obrigatoriamente, estar localizado na pasta `OriginalBIB`.",
 
-- **<idioma>:** Idioma da sua Dissertação ou Tese. Para PORTUGUÊS utilize: `pt` / Para INGLÊS utilize: `en`)",
+- **\<idioma>:** Idioma da sua Dissertação ou Tese. Para PORTUGUÊS utilize: `pt` / Para INGLÊS utilize: `en`)",
 
-- **<tipo>:** Tipo das suas referências. Para estilos NUM ou ALPHA utilize: `num` ou `alpha` / Para o estilo APALIKE utilize: `apa`"
+- **\<tipo>:** Tipo das suas referências. Para estilos NUM ou ALPHA utilize: `num` ou `alpha` / Para o estilo APALIKE utilize: `apa`"
 
 Com os parâmetros devidamente configurados, você já pode fazer a execução do script. Para isso, abra o Terminal na linha de comando do seu projeto e execute o script substituindo os valores `<parametro>` pelas suas informações:
 
@@ -256,6 +256,39 @@ Entenda alguns dos possíveis `Warnings` que poderão ser gerados em seu relató
 - _The { tag } field takes no year information_: A informação do ano só deve constar dentro da tag `year={}` e não junto com o nome da Conferência ou Journal.
 - _Field { tag } is not capitalized_: Os nomes das conferências, jornals, editoras e etc, devem estar capitalizados, ou seja, sempre a primeira letra de cada palavra precisa estar em maiúsculo.
 - _Missing: { tags }_: As tags informadas dentro dos `{}` são de preenchimento obrigatório para a determinada citação.
+	- Para cada tipo de citação (`num/alpha` ou `apa`) existem campos obrigatórios, entenda quais são:
+		```python
+		if TYPE_REFERENCES == 'num-alpha':
+		    REQ = {
+			'book': {'author', 'title', 'publisher', 'year', 'numpages'},
+			'article': {'title', 'author', 'journal', 'volume', 'year', 'month', 'pages'},
+			'inproceedings': {'title', 'author', 'booktitle', 'pages', 'year'},
+			'conference': {'title', 'author', 'booktitle', 'pages', 'year'},
+			'proceedings': {'title', 'author', 'booktitle', 'pages', 'year'},
+			'mastersthesis': {'title', 'author', 'numpages', 'school', 'year'},
+			'phdthesis': {'title', 'author', 'numpages', 'school', 'year'},
+			'techreport': {'title', 'author', 'numpages', 'institution', 'year'},
+			'misc': {'title', 'author', 'url', 'urlaccessdate'},
+			'booklet': {'title', 'author', 'howpublished', 'address', 'year', 'numpages'},
+			'inbook': {'title', 'author', 'year', 'pages', 'publisher', 'chapter'},
+			'incollection': {'title', 'author', 'year', 'booktitle', 'publisher'}
+		    }
+		elif TYPE_REFERENCES == 'apa':
+		    REQ = {
+			'book': {'title', 'author', 'publisher', 'year', 'address'},
+			'article': {'title', 'author', 'year', 'journal', 'pages', 'volume'},
+			'inproceedings': {'title', 'author', 'booktitle', 'pages', 'address', 'organization', 'year'},
+			'conference': {'title', 'author', 'booktitle', 'pages', 'address', 'organization', 'year'},
+			'proceedings': {'title', 'author', 'booktitle', 'pages', 'year'},
+			'mastersthesis': {'title', 'author', 'year', 'school', 'address'},
+			'phdthesis': {'title', 'author', 'year', 'school', 'address'},
+			'techreport': {'title', 'author', 'institution', 'year', 'type'},
+			'misc': {'title', 'author', 'year', 'note', 'howpublished'},
+			'booklet': {'title', 'author', 'howpublished', 'address', 'year'},
+			'inbook': {'title', 'author', 'year', 'pages', 'publisher', 'address', 'chapter'},
+			'incollection': {'title', 'author', 'year', 'booktitle', 'publisher', 'volume', 'pages', 'edition'}
+		    }
+		```
 
 #### Novo arquivo.bib
 
