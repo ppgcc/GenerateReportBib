@@ -1,5 +1,7 @@
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ppgcc/GenerateReportBib/blob/master/GoogleColab_GRB.ipynb)
 
+[![](https://img.shields.io/static/v1?label=YouTube&message=Acesse%20o%20V%C3%ADdeo&color=red)](https://www.youtube.com/watch?v=qU_Uc38Y7pU&feature=youtu.be)
+
 # Generate Report Bib (GRB)
 
 Este projeto é uma iniciativa do atual Representante Discente do Programa de Pós-graduação em Ciência da Computação (PPGCC/PUCRS) **[Olimar Teixeira Borges](https://github.com/olimarborges)**, que visa auxiliar na padronização das Referências Bibliográficas utilizadas nas Dissertações de Mestrado e Teses de Doutorado do PPGCC.
