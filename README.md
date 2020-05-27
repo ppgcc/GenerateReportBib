@@ -4,7 +4,7 @@
 
 # Generate Report Bib (GRB)
 
-Este projeto é uma iniciativa do atual Representante Discente do Programa de Pós-graduação em Ciência da Computação (PPGCC/PUCRS) **[Olimar Teixeira Borges](https://github.com/olimarborges)**, que visa auxiliar na padronização das Referências Bibliográficas utilizadas nas Dissertações de Mestrado e Teses de Doutorado do PPGCC.
+Este projeto é uma iniciativa do atual Representante Discente do Programa de Pós-graduação em Ciência da Computação (PPGCC/PUCRS) **[Olimar Teixeira Borges](https://github.com/olimarborges)**, a partir do código base do ex-discente **[Pedro Ballester](https://github.com/ballester)** que visa auxiliar na padronização das Referências Bibliográficas utilizadas nas Dissertações de Mestrado e Teses de Doutorado do PPGCC.
 
 No entanto, após o uso deste script, não significará uma garantia de que seu `arquivo.bib` está totalmente correto. Não isentando o(a) pesquisador(a) de verificar a adequação de suas referências com a padronização seguida pelo PPGCC/PUCRS. Mas ele servirá como uma forma de auxílio durante o processo de verificação das suas referências bibliográfias.
 
