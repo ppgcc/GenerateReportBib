@@ -31,7 +31,7 @@ LIST_STOPWORDS_GERMAN = stopwords.words('german')
 LIST_STOPWORDS_GERMAN.append('and')
 
 # Exception List
-EXCEPTION_LIST = ['arXiv', '-', '\&', '\\&', '&']
+EXCEPTION_LIST = ['ArXiv', 'arXiv', 'arxiv', '-', '\&', '&']
 
 #Create directories
 path_current = os.getcwd() # Current directory
@@ -83,7 +83,7 @@ def main():
     print('TYPE_REFERENCES: ', TYPE_REFERENCES)
     TYPE_REFERENCES = TYPES[TYPE_REFERENCES]
 
-    FILE_NAME = 'referencesTest.bib'
+    FILE_NAME = 'referencesTest2.bib'
     print('FILE_NAME: ', FILE_NAME)
     '''
     #production
@@ -421,6 +421,9 @@ def regenerate_bib(bib, REQ):
             #capitalize
             if len(phrase_cap) > 0:
                 bib.fields['publisher'] = phrase_cap
+            elif '&' in phrase:
+                phrase = treatAmpersand(phrase)
+                bib.fields['publisher'] = phrase
 
             if publisher_capitalize == True:
                 msg += 'Field { publisher } is not capitalized; '
@@ -437,6 +440,9 @@ def regenerate_bib(bib, REQ):
             #capitalize
             if len(phrase_cap) > 0:
                 bib.fields['journal'] = phrase_cap
+            elif '&' in phrase:
+                phrase = treatAmpersand(phrase)
+                bib.fields['journal'] = phrase
 
             if journal_capitalize == True:
                 msg += 'Field { journal } is not capitalized; '
@@ -453,6 +459,9 @@ def regenerate_bib(bib, REQ):
             #capitalize
             if len(phrase_cap) > 0:
                 bib.fields['booktitle'] = phrase_cap
+            elif '&' in phrase:
+                phrase = treatAmpersand(phrase)
+                bib.fields['booktitle'] = phrase
 
             if booktitle_capitalize == True:
                 msg += 'Field { booktitle } is not capitalized; '
@@ -469,6 +478,9 @@ def regenerate_bib(bib, REQ):
             #capitalize
             if len(phrase_cap) > 0:
                 bib.fields['school'] = phrase_cap
+            elif '&' in phrase:
+                phrase = treatAmpersand(phrase)
+                bib.fields['school'] = phrase
 
             if school_capitalize == True:
                 msg += 'Field { school } is not capitalized; '
@@ -485,6 +497,9 @@ def regenerate_bib(bib, REQ):
             #capitalize
             if len(phrase_cap) > 0:
                 bib.fields['institution'] = phrase_cap
+            elif '&' in phrase:
+                phrase = treatAmpersand(phrase)
+                bib.fields['institution'] = phrase
 
             if institution_capitalize == True:
                 msg += 'Field { institution } is not capitalized; '
@@ -567,7 +582,10 @@ def check_parentheses_and_capitalize(phrase):
             if word == 'e': # e-Business, e-Science, ...
                  words_aux.append(word+"-"+word2)
             elif word in EXCEPTION_LIST:
-                words_aux.append(word)
+                if "&" in word:
+                    words_aux.append("&")
+                else:
+                    words_aux.append(word)
             elif word[0].isdigit() == True:
                 words_aux.append(word)
             else:
@@ -596,6 +614,21 @@ def check_parentheses_and_capitalize(phrase):
         phrase_cap = ''
 
     return uncapitalized, phrase_cap
+
+def treatAmpersand(phrase):
+    phrase = re.sub(r"\((.*?)\)", ' ', phrase)
+
+    words = phrase.split()
+    words_aux = []
+    for word in words:
+        if "&" in word:
+            words_aux.append("&")
+        else:
+            words_aux.append(word)
+
+    new_phrase = ' '.join([word for word in words_aux])
+
+    return new_phrase
 
 def check_article_year_month(fields, months, type_references):
     fields = fields.split()
