@@ -543,7 +543,7 @@ def find_year(phrase, tag):
     msg = ''
     result = re.findall(re.compile('.*([1-3][0-9]{3})'), phrase)
     if len(result) > 0:
-        msg = 'The {'+tag+'} field takes no year information:  '+ str(result) +' remove; '
+        msg = 'The {'+tag+'} field should not contain the year information:  '+ str(result) +' remove; '
         phrase = phrase.replace(str(result[0]), '')
 
     return msg, phrase
