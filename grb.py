@@ -310,7 +310,7 @@ def main():
         tag_inv_global = False
         for entry in bib_data.entries:
             bib = bib_data.entries[entry]
-            print('entry: ============ ', entry)
+            #print('entry: ============ ', entry)
             msg, tag_inv = check(bib, REQ, MONTHS, TYPE_REFERENCES)
 
             if tag_inv == False:
