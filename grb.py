@@ -83,7 +83,7 @@ def main():
     print('TYPE_REFERENCES: ', TYPE_REFERENCES)
     TYPE_REFERENCES = TYPES[TYPE_REFERENCES]
 
-    FILE_NAME = 'referencesTest2.bib'
+    FILE_NAME = 'referencesTest.bib'
     print('FILE_NAME: ', FILE_NAME)
     '''
     #production
@@ -121,6 +121,7 @@ def main():
     #pass_language = False
 
     count = 0
+    tag_rep_ant = ''
     while stop == True:
         try:
             '''
@@ -166,13 +167,20 @@ def main():
         except BibliographyDataError as identifier:
             read_error_bib = True
 
-            count+=1
             msg_erros += '- ## ' + str(identifier) + '\r'
             tag_rep = str(identifier).split(':')
 
+            if tag_rep_ant == tag_rep[1]:
+                count+=1
+            else:
+                count=1
+
+            tag_rep_ant = tag_rep[1].strip()
+            #print(tag_rep_ant,'\r')
+
             #input file
             fin = open("refer_find_errors_generate_temp.bib", "rt",encoding="utf-8")
-            contents = fin.read().replace(str(tag_rep[1]).strip(), str(tag_rep[1]).strip()+str(count), count)
+            contents = fin.read().replace(str(tag_rep[1]).strip()+str(","), str(tag_rep[1]).strip()+str(count)+str(","), count)
             fin.close()
 
             fin = open("refer_find_errors_generate_temp.bib", "w+",encoding="utf-8")
@@ -302,7 +310,7 @@ def main():
         tag_inv_global = False
         for entry in bib_data.entries:
             bib = bib_data.entries[entry]
-            #print('entry: ============ ', entry)
+            print('entry: ============ ', entry)
             msg, tag_inv = check(bib, REQ, MONTHS, TYPE_REFERENCES)
 
             if tag_inv == False:
@@ -586,11 +594,12 @@ def check_parentheses_and_capitalize(phrase):
                     words_aux.append("&")
                 else:
                     words_aux.append(word)
-            elif word[0].isdigit() == True:
-                words_aux.append(word)
+            elif len(word) > 0:
+                if word.isdigit() == True:
+                    words_aux.append(word)
             else:
                 if word.isupper() == False:
-                    if word[0].isupper() == False:
+                    if word.isupper() == False:
                     #if word != word.capitalize():
                         uncapitalized = True
                         if hif == True:
