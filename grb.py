@@ -168,9 +168,9 @@ def main():
             read_error_bib = True
 
             msg_erros += '- ## ' + str(identifier) + '\r'
-            tag_rep = str(identifier).split(':')
+            tag_rep = str(identifier).split(':', 1)
 
-            if tag_rep_ant == tag_rep[1]:
+            if tag_rep_ant == tag_rep[1].strip():
                 count+=1
             else:
                 count=1
@@ -180,7 +180,9 @@ def main():
 
             #input file
             fin = open("refer_find_errors_generate_temp.bib", "rt",encoding="utf-8")
-            contents = fin.read().replace(str(tag_rep[1]).strip()+str(","), str(tag_rep[1]).strip()+str(count)+str(","), count)
+            old = str(tag_rep[1]).strip()+str(",")
+            new = str(tag_rep[1]).strip()+str(count)+str(",")
+            contents = fin.read().replace(old, new, count)
             fin.close()
 
             fin = open("refer_find_errors_generate_temp.bib", "w+",encoding="utf-8")
