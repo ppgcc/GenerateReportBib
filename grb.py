@@ -120,8 +120,10 @@ def main():
     file_found = False
     #pass_language = False
 
-    count = 0
-    tag_rep_ant = ''
+    count_repeated_entry = 0
+    count_duplicate_field = 0
+    rep_tag_ant = ''
+    dup_field_ant = ''
     while stop == True:
         try:
             '''
@@ -168,26 +170,56 @@ def main():
             read_error_bib = True
 
             msg_erros += '- ## ' + str(identifier) + '\r'
-            tag_rep = str(identifier).split(':', 1)
 
-            if tag_rep_ant == tag_rep[1].strip():
-                count+=1
-            else:
-                count=1
+            if 'repeated bibliograhpy entry' in str(identifier):
+                tag_rep = str(identifier).split(':', 1)
 
-            tag_rep_ant = tag_rep[1].strip()
-            #print(tag_rep_ant,'\r')
+                if rep_tag_ant == tag_rep[1].strip():
+                    count_repeated_entry+=1
+                else:
+                    count_repeated_entry=1
 
-            #input file
-            fin = open("refer_find_errors_generate_temp.bib", "rt",encoding="utf-8")
-            old = str(tag_rep[1]).strip()+str(",")
-            new = str(tag_rep[1]).strip()+str(count)+str(",")
-            contents = fin.read().replace(old, new, count)
-            fin.close()
+                rep_tag_ant = tag_rep[1].strip()
+                #print(tag_rep_ant,'\r')
 
-            fin = open("refer_find_errors_generate_temp.bib", "w+",encoding="utf-8")
-            fin.write(contents)
-            fin.close()
+                #input file
+                fin = open("refer_find_errors_generate_temp.bib", "rt",encoding="utf-8")
+                old = str(tag_rep[1]).strip()+str(",")
+                new = str(tag_rep[1]).strip()+str(count_repeated_entry)+str(",")
+                contents = fin.read().replace(old, new, count_repeated_entry)
+                fin.close()
+
+                fin = open("refer_find_errors_generate_temp.bib", "w+",encoding="utf-8")
+                fin.write(contents)
+                fin.close()
+
+            elif 'has a duplicate' in str(identifier):
+                arr_msg = str(identifier).split(' ')
+                tag = arr_msg[3]
+                dup_field = arr_msg[7]
+
+                if dup_field_ant == dup_field.strip():
+                    count_duplicate_field+=1
+                else:
+                    count_duplicate_field=1
+
+                dup_field_ant = dup_field.strip()
+
+                old = dup_field
+                new = dup_field+str(count_duplicate_field)
+
+                #input file
+                fin = open("refer_find_errors_generate_temp.bib", "rt",encoding="utf-8")
+                contents = fin.read()
+                contents_partition = contents.partition(tag)
+                res_replace = contents_partition[2].replace(old, new, count_duplicate_field)
+                contents = contents_partition[0]+contents_partition[1]+res_replace
+                contents
+                fin.close()
+
+                fin = open("refer_find_errors_generate_temp.bib", "w+",encoding="utf-8")
+                fin.write(contents)
+                fin.close()
 
         except UndefinedMacro as identifier:
             read_error_bib = True
