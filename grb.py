@@ -444,8 +444,8 @@ def main():
 
 
 def regenerate_bib(bib, REQ):
-    list_fields_keys = [field_key.lower() for field_key in bib.fields.keys()]
-    list_fields_persons = [field_person.lower() for field_person in bib.persons.keys()]
+    list_fields_keys = [field_key.lower() for field_key in bib.fields.keys() if bib.fields[field_key] != '']
+    list_fields_persons = [field_person.lower() for field_person in bib.persons.keys() if bib.persons[field_person] != '']
     fields = set(list_fields_keys + list_fields_persons)
     missing = REQ[bib.type].difference(fields)
 
