@@ -1,10 +1,13 @@
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ppgcc/GenerateReportBib/blob/master/GoogleColab_GRB.ipynb)
 
+### Assistam ao vídeo no YouTube, onde explico como executar o Script no Google Colab passo-a-passo. 
+#### E não esqueça de dar aquele like e ativar o sininho! (Sempre quis dizer isso... HAHAHAHA! Zueria né! Só pra descontrair! ;D)
+### Aproveitem o Script!
 [![](https://img.shields.io/static/v1?label=YouTube&message=Acesse%20o%20V%C3%ADdeo&color=red)](https://www.youtube.com/watch?v=qU_Uc38Y7pU&feature=youtu.be)
 
 # Generate Report Bib (GRB.py)
 
-Este projeto é uma iniciativa do atual Representante Discente do Programa de Pós-graduação em Ciência da Computação (PPGCC/PUCRS) **[Olimar Teixeira Borges](https://github.com/olimarborges)**, a partir do código base (arquivo `find_erros_bib.py` listado neste repositório) do Alumni de Mestrado **[Pedro Ballester](https://github.com/ballester)**. Tendo como objetivo auxiliar na padronização das Referências Bibliográficas utilizadas nas Dissertações de Mestrado e Teses de Doutorado do PPGCC.
+Este projeto é uma iniciativa do aluno de Doutorado **[Olimar Teixeira Borges](https://github.com/olimarborges)**, a partir do código base (arquivo `find_erros_bib.py` listado neste repositório) do Alumni de Mestrado **[Pedro Ballester](https://github.com/ballester)**. Tendo como objetivo auxiliar na padronização das Referências Bibliográficas utilizadas nas Dissertações de Mestrado e Teses de Doutorado do PPGCC.
 
 No entanto, após o uso deste projeto, não significará uma garantia de que seu `arquivo.bib` está totalmente correto. Não isentando o(a) pesquisador(a) de verificar a adequação de suas referências com a padronização seguida pelo PPGCC/PUCRS. Mas ele servirá como uma forma de auxílio durante o processo de verificação das suas referências bibliográfias.
 
@@ -12,6 +15,7 @@ No momento, as verificações programadas neste projeto seguem a padronização 
 
 **ATENÇÃO!**
   - Antes de fazer o uso deste projeto, leia a seção [Utilização](#utilização).
+  - E também assista ao vídeo no [YouTube](https://www.youtube.com/watch?v=qU_Uc38Y7pU&feature=youtu.be), onde explico como executar o Script no Google Colab passo-a-passo.
   - O arquivo principal deste projeto é o script **`grb.py`**, que é o responsável por realizar todo o processamento e verificações do seu **`arquivo.bib`**, como também gerar os **`relatórios de erros`**.
   - Para fazer uso do **grb.py** você não precisa mexer nele. A sua edição só é estimulada, caso pretenda contribuir com melhorias e refatorações no código. Caso contrário, qualquer mudança pode ocasionar mal funcionamento na geração dos **`relatórios de erros`** e do **`novo_arquivo.bib`**.
 
