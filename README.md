@@ -1,9 +1,10 @@
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ppgcc/GenerateReportBib/blob/master/GoogleColab_GRB.ipynb)
-
 ### Assistam ao vídeo no YouTube, onde explico como executar o Script no Google Colab passo-a-passo. 
-#### E não esqueça de dar aquele like e ativar o sininho! (Sempre quis dizer isso... HAHAHAHA! Zueria né! Só pra descontrair! ;D)
+#### E não esqueça de dar aquele like e ativar o sininho! (Zueria né! ;D)
 ### Aproveitem o Script!
 [![](https://img.shields.io/static/v1?label=YouTube&message=Acesse%20o%20V%C3%ADdeo&color=red)](https://www.youtube.com/watch?v=qU_Uc38Y7pU&feature=youtu.be)
+
+### Usem o arquivo no Colab para executar o script online:
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ppgcc/GenerateReportBib/blob/master/GoogleColab_GRB.ipynb)
 
 # Generate Report Bib (GRB.py)
 
