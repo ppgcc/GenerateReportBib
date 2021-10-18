@@ -317,17 +317,17 @@ def main():
             }
         elif TYPE_REFERENCES == 'apa':
             REQ = {
-                'book': {'title', 'author', 'publisher', 'year', 'address'},
+                'book': {'title', 'author', 'publisher', 'year'},
                 'article': {'title', 'author', 'year', 'journal', 'pages', 'volume'},
-                'inproceedings': {'title', 'author', 'booktitle', 'pages', 'address', 'organization', 'year'},
-                'conference': {'title', 'author', 'booktitle', 'pages', 'address', 'organization', 'year'},
+                'inproceedings': {'title', 'author', 'booktitle', 'pages', 'organization', 'year'},
+                'conference': {'title', 'author', 'booktitle', 'pages', 'organization', 'year'},
                 'proceedings': {'title', 'author', 'booktitle', 'pages', 'year'},
                 'mastersthesis': {'title', 'author', 'year', 'school', 'address'},
                 'phdthesis': {'title', 'author', 'year', 'school', 'address'},
                 'techreport': {'title', 'author', 'institution', 'year', 'type'},
                 'misc': {'title', 'author', 'year', 'note', 'howpublished'},
-                'booklet': {'title', 'author', 'howpublished', 'address', 'year'},
-                'inbook': {'title', 'author', 'year', 'pages', 'publisher', 'address', 'chapter'},
+                'booklet': {'title', 'author', 'howpublished', 'year'},
+                'inbook': {'title', 'author', 'year', 'pages', 'publisher', 'chapter'},
                 'incollection': {'title', 'author', 'year', 'booktitle', 'publisher', 'volume', 'pages', 'edition'}
             }
 

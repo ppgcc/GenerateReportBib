@@ -245,7 +245,7 @@ Caso o seu `arquivo.bib` esteja com algum problema, o **grb.py** ficará gerando
 }
 ```
 
-- Os labels programados neste **grb.py** para serem verificados são: _`@book, @article, @inproceedings @proceedings, @mastersthesis, @conference, @phdthesis, @techreport, @misc, @booklet, @inbook, incollection`_. Qualquer outro label de referência que estiver dentro do `arquivo.bib`, gerará um relatório de erro específico. Esta restrição se deve, pois são estes labels que estão definidos na padronização utilizada no documento de referências do PPGCC. Demais tags não são previstas, portanto, não são tratadas. Para que o **grb.py** funcione, sugiro retirar ou atualizar por lables válidos, dentro do `arquivo.bib` e executar novamente o **grb.py**.
+- Os labels programados neste **grb.py** para serem verificados são: _`@book, @article, @inproceedings @proceedings, @mastersthesis, @conference, @phdthesis, @techreport, @misc, @booklet, @inbook, @incollection`_. Qualquer outro label de referência que estiver dentro do `arquivo.bib`, gerará um relatório de erro específico. Esta restrição se deve, pois são estes labels que estão definidos na padronização utilizada no documento de referências do PPGCC. Demais tags não são previstas, portanto, não são tratadas. Para que o **grb.py** funcione, sugiro retirar ou atualizar por lables válidos, dentro do `arquivo.bib` e executar novamente o **grb.py**.
 
 Veja um exemplo de relatório que não gera o `novo_arquivo.bib`, devido a alguns dos erros mencionados anteriormente:
 
@@ -270,7 +270,7 @@ Entenda alguns dos possíveis `Warnings` que poderão ser gerados em seu relató
   - O screenshot a seguir apresenta um relatório com erro de `_New .bib file was not generated! Invalid tags have been identified in your .bib._`, que foi gerado pelo _Type not implemented:_
   ![](screenshots/bibNotGenerate.PNG)
 
-- _Failed Month and Year: year={Mon, Year} check_: Em referências no estilo `apa`, para citações do tipo `@article`, o mês e ano precisam constar juntos dentro da mesma tag `year={Mon, Year}`.
+- _Failed Month and Year: year={Mon, Year} check_: Em referências no estilo `apa`, para citações do tipo `@article`, o mês e ano precisam constar juntos dentro da mesma tag `year={Mon, Year}`. Informe o mês abreviado.
 - _Failed Month month={ Mon } check_: Em referências no estilo `num` ou `alpha`, para citações do tipo `@article`, a informação de `month={}` e `year={}` também são obrigatórias, mas no entanto, devem ser inseridas em suas respectivas tags individuais.
 - _The { tag } field should not contain the year information_: A informação do ano só deve constar dentro da tag `year={}` e não junto com o nome da Conferência ou Journal.
 - _Field { tag } is not capitalized_: Os nomes das conferências, jornals, editoras e etc, devem estar capitalizados, ou seja, sempre a primeira letra de cada palavra precisa estar em maiúsculo.
@@ -294,17 +294,17 @@ Entenda alguns dos possíveis `Warnings` que poderão ser gerados em seu relató
 		    }
 		elif TYPE_REFERENCES == 'apa':
 		    REQ = {
-			'book': {'title', 'author', 'publisher', 'year', 'address'},
+			'book': {'title', 'author', 'publisher', 'year'},
 			'article': {'title', 'author', 'year', 'journal', 'pages', 'volume'},
-			'inproceedings': {'title', 'author', 'booktitle', 'pages', 'address', 'organization', 'year'},
-			'conference': {'title', 'author', 'booktitle', 'pages', 'address', 'organization', 'year'},
+			'inproceedings': {'title', 'author', 'booktitle', 'pages', 'organization', 'year'},
+			'conference': {'title', 'author', 'booktitle', 'pages','organization', 'year'},
 			'proceedings': {'title', 'author', 'booktitle', 'pages', 'year'},
 			'mastersthesis': {'title', 'author', 'year', 'school', 'address'},
 			'phdthesis': {'title', 'author', 'year', 'school', 'address'},
 			'techreport': {'title', 'author', 'institution', 'year', 'type'},
 			'misc': {'title', 'author', 'year', 'note', 'howpublished'},
-			'booklet': {'title', 'author', 'howpublished', 'address', 'year'},
-			'inbook': {'title', 'author', 'year', 'pages', 'publisher', 'address', 'chapter'},
+			'booklet': {'title', 'author', 'howpublished', 'year'},
+			'inbook': {'title', 'author', 'year', 'pages', 'publisher', 'chapter'},
 			'incollection': {'title', 'author', 'year', 'booktitle', 'publisher', 'volume', 'pages', 'edition'}
 		    }
 		```
